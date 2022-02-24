@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>sign up user</title>
+    <meta name="description" content="sign up page for user">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+    {% if messages %}
+        {% for message in messages %}
+            <!-- Success alert -->
+            <div class="container fixed-top">
+                <div class="py-md-4">
+                    <div class="alert d-flex alert-success" role="alert">
+                        <i class="ai-check-circle fs-xl me-3"></i>
+                        <div>
+                            {{ message }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: blueviolet;
+        }
+
+        .main {
+            top: 50%;
+            left: 50%;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            font-family: 'Questrial', sans-serif;
+        }
+
+        .login {
+            height: 750px;
+            width: 450px;
+            /* align-items: center;
+            justify-content: center;
+            text-align: center; */
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 25px 30px black;
+        }
+
+        .login i {
+            position: absolute;
+        }
+
+        .txt {
+            text-decoration: none;
+            border: none;
+            background: none;
+            margin-left: 40px;
+            color: rgb(216, 17, 216);
+        }
+
+        .txt::placeholder {
+            color: rgb(235, 51, 235);
+            font-size: smaller;
+        }
+
+        .txt:focus {
+            outline: 0;
+        }
+
+        p {
+            padding-top: 20px;
+            margin-left: 40px;
+            font-size: smaller;
+        }
+
+        .fp {
+            margin-left: 210px;
+            font-size: small;
+        }
+
+        .fp a {
+            text-decoration: none;
+            transition: 0.5s;
+        }
+
+        .fp a:hover {
+            border-bottom: 0.1px solid purple;
+        }
+
+        h1 {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .contact {
+            display: flex;
+            justify-content: space-around;
+            margin-top: -200px;
+            margin-left: 80px;
+            margin-right: 80px;
+            padding-top: 30px;
+        }
+
+        .contact i {
+            transition: 0.3s;
+        }
+
+        .contact i:hover {
+            transform: scale(1.1);
+        }
+
+        hr {
+            border: 0.1px solid rgb(155, 152, 155);
+            margin-left: 30px;
+            margin-right: 30px;
+        }
+
+        .btn {
+            margin-left: 120px;
+            margin-top: 40px;
+            padding: 10px 80px;
+            border: none;
+            border-radius: 20px;
+            background-image: linear-gradient(to right, rgb(235, 62, 235), rgb(92, 92, 238));
+            color: white;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:focus {
+            outline: 0;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+        }
+
+        .signup {
+            margin-left: 130px;
+            font-size: medium;
+            color: rgb(73, 78, 77);
+            margin-top: 10px;
+        }
+
+        .last {
+            margin-left: 170px;
+            margin-top: 10px;
+            font-size: medium;
+            color: rgb(136, 129, 120);
+        }
+
+        .last p:nth-child(1) {
+            margin-top: 10px;
+        }
+
+        .last p:nth-child(2) {
+            margin-left: 60px;
+            color: rgb(236, 124, 236);
+            /* margin-top: 20px; */
+        }
+
+        .last a {
+            text-decoration: none;
+        }
+    </style>
+
+</head>
+<body>
+<form method="post">
+    {% csrf_token %}
+    <div class="main">
+        <div class="login">
+            <h1>SignUp</h1>
+            <p>First Name</p>
+            <label>
+                {{ form.first_name }}
+            </label>
+            <hr>
+            <p>Last Name</p>
+            <label>
+                {{ form.last_name }}
+            </label>
+            <hr>
+            <p>Username</p>
+            <label>
+                {{ form.username }}
+            </label> @Amail.com
+            <hr>
+            <p>Password</p>
+            <label>
+                {{ form.password }}
+            </label>
+            <hr>
+            <p>Recovery Code</p>
+            {{ form.recovery }}
+            <hr>
+            <p>Email</p>
+            {{ form.email }}
+            <hr>
+            <p>Phone</p>
+            {{ form.phone_number }}
+            <hr>
+            <p>Country</p>
+            {{ form.country }}
+            <hr>
+            <p>Birthdate</p>
+            {{ form.birthdate }}
+            <hr>
+            <hr>
+            <input type="submit" class="btn" value="SignUp">
+            <div class="last">
+                <p><a href="{% url 'login' %}">Login</a></p>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#recovery").change(function () {
+                if ($(this).val() === 'email') {
+                    $("#Email").removeAttr("disabled");
+                    $("#Email").focus();
+                    $("#Email").attr("required", "required");
+                    $("#Phone").attr("disabled", "disabled");
+                }
+            });
+        });
+        $(function () {
+            $("#recovery").change(function () {
+                if ($(this).val() === 'phone') {
+                    $("#Phone").removeAttr("disabled");
+                    $("#Phone").focus();
+                    $("#Phone").attr("required", "required");
+                    $("#Email").attr("disabled", "disabled");
+                }
+            });
+        });
+    </script>
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+</form>
+</body>
+</html>
