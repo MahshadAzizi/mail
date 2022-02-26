@@ -16,7 +16,7 @@ class SignUpForm(forms.ModelForm):
 
             }),
             'phone_number': forms.TextInput(attrs={
-                'class': 'txt', 'placeholder': 'phone_number', 'disabled': True, 'id': 'Email'
+                'class': 'txt', 'placeholder': 'phone_number', 'disabled': True, 'id': 'Phone'
             }),
             'password': forms.TextInput(attrs={'class': 'txt', 'placeholder': 'password'}),
             'gender': forms.TextInput(attrs={'class': 'txt', 'placeholder': 'gender'}),
@@ -24,7 +24,7 @@ class SignUpForm(forms.ModelForm):
             'country': forms.TextInput(attrs={'class': 'txt', 'placeholder': 'country'}),
             'recovery': forms.Select(attrs={'class': 'txt', 'placeholder': 'recovery', 'id': 'recovery'},
                                      choices=RECOVERY),
-            'birth_date': forms.TextInput(attrs={'class': 'txt', 'placeholder': 'birth_date'}),
+            'birth_date': forms.TextInput(attrs={'class': 'txt', 'type': 'date', 'placeholder': 'birth_date'}),
         }
 
     def save(self, commit=True):
@@ -64,12 +64,11 @@ class ForgetPasswordForm(forms.Form):
         email = self.cleaned_data.get('email')
         user = User.objects.filter(email=email).first()
         if user is None:
-            ValidationError('کاربری با این مشخصات یافت نشد')
+            ValidationError('use not found')
         return user
 
 
 class ChangePasswordForm(forms.Form):
-
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'txt', 'placeholder': 'password'
     }))
