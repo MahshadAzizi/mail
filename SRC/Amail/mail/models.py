@@ -30,7 +30,7 @@ class Amail(models.Model):
     subject = models.CharField(max_length=80, null=True, blank=True)
     body = models.TextField(max_length=255, null=True, blank=True)
     mail_date = models.DateTimeField(auto_now=True)
-    category = models.ManyToManyField(Category, related_name='amail_category')
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, null=True, blank=True)
     archive = models.BooleanField(null=True, default=False)
     file = models.FileField(validators=[file_size], null=True, upload_to='media/', blank=True)
     signature = models.ForeignKey(Signature, on_delete=models.DO_NOTHING, null=True, blank=True)
@@ -38,4 +38,4 @@ class Amail(models.Model):
     replay = models.ForeignKey('Amail', on_delete=models.DO_NOTHING, null=True, blank=True)
 
     def __str__(self):
-        return self.sender, self.subject
+        return str(self.sender) + str(self.subject)

@@ -18,7 +18,7 @@ class SignUpForm(forms.ModelForm):
             'phone_number': forms.TextInput(attrs={
                 'class': 'txt', 'placeholder': 'phone_number', 'disabled': True, 'id': 'Phone'
             }),
-            'password': forms.TextInput(attrs={'class': 'txt', 'placeholder': 'password'}),
+            'password': forms.TextInput(attrs={'class': 'txt', 'placeholder': 'password', 'type': 'password'}),
             'gender': forms.TextInput(attrs={'class': 'txt', 'placeholder': 'gender'}),
 
             'country': forms.TextInput(attrs={'class': 'txt', 'placeholder': 'country'}),
@@ -42,7 +42,7 @@ class LogInForm(forms.ModelForm):
         fields = ['username', 'password']
         widgets = {
             'username': forms.TextInput(attrs={'class': 'txt', 'placeholder': 'username'}),
-            'password': forms.TextInput(attrs={'class': 'txt', 'placeholder': 'password'}),
+            'password': forms.TextInput(attrs={'class': 'txt', 'placeholder': 'password', 'type': 'password'}),
         }
 
 
@@ -82,6 +82,6 @@ class ChangePasswordForm(forms.Form):
         password = self.cleaned_data.get('password')
 
         if re_password != password:
-            ValidationError('رمز شما با اون یکی مغایرت دارد')
+            ValidationError('not same')
 
         return re_password

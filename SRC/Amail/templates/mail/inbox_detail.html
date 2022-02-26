@@ -1,0 +1,56 @@
+{% extends "layout/_base.html" %}
+{% block title %}NEW AMAIL{% endblock %}
+{% block body %}
+{% load static %}
+    <form action="/mail/mail_detail/">
+    <div class="container">
+            <div class="row">
+              <div class="col-md-8">
+                <div class="card card-signin my-5">
+                  <div class="card-body">
+                    <a class="text-dark" ><b>{{ amail.username }}</b></a>
+                    <br><a class="text-dark" ><b>{{ amail.subject }}</b></a>
+                    <br><a class="text-dark" ><b>{{ amail.body }}</b></a>
+                    <br><small class="text-muted">send on {{ amail.mail_date }}</small>
+                    <br><br>
+                    <p class="card-text text-dark">{{ amail.description }}</p>
+                  </div>
+                  <a href="{{ amail.file.url }}"><img class="card-img-top" src="{{ amail.file.url }}" alt=""></a>
+                </div>
+               </div>
+            </div>
+            <br>
+{#            <div class="row">#}
+{#                <div class="col-md-8">#}
+{#                 <div class="card card-signin my-5">#}
+{#                  <div class="card-body">#}
+{#                    {% if comments %}#}
+{#                    <h3 class="card-text text-dark">Comment{{ comments.count|pluralize }}: {{ comments.count }}</h3>#}
+{#                    {% for comment in comments %}#}
+{#                        <div class="card-body">#}
+{#                            <p class="text-dark" ><b>{{ comment.username }}</b></p>#}
+{#                            <small>{{ comment.comment_date }}</small><br><br>#}
+{#                            <p class="card-text text-dark">{{ comment.comment }}</p>#}
+{#                        </div>#}
+{#                        <hr class="my-1">#}
+{#                    {% endfor %}#}
+{#                     </div>#}
+{#                    {% else %}#}
+{#                        <p>No comments to show!</p>#}
+{#                    {% endif %}#}
+{#                 </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="col-md-8">#}
+{#                <div class="card card-signin my-5">#}
+{#                  <div class="card-body" >#}
+{#                      <a href="/post/new_comment/{{ post.id }}" style="color: white; font-weight: bold"><h2>Leave a comment</h2></a>#}
+{#                  </div>#}
+{#               </div>#}
+{#            </div>#}
+
+
+
+    </div>
+</form>
+{% endblock%}

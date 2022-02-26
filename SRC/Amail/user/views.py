@@ -93,7 +93,7 @@ class ActivateAccountForgotPassword(View):
             user.is_active = True
             login(request, user)
             messages.success(request, 'Your account have been confirmed.')
-            return redirect('home')
+            return redirect('change_password')
 
         messages.warning(request, 'The confirmation link was invalid, possibly because it has already been used.')
         return redirect('signup')
@@ -102,13 +102,12 @@ class ActivateAccountForgotPassword(View):
 class ForgotPassword(FormView):
     form_class = ForgetPasswordForm
     template_name = 'user/forgot_password.html'
-    success_url = 'home'
+    success_url = 'change_password'
 
     def form_valid(self, form):
         user: User = form.cleaned_data.get('email')
         user.is_active = False
         user.save()
-
         current_site = get_current_site(self.request)
         subject = 'Activate Your MySite Account'
         message = render_to_string('user/forgot_activation_email.html', {
@@ -118,14 +117,23 @@ class ForgotPassword(FormView):
             'token': account_activation_token.make_token(user),
         })
         user.email_user(subject, message)
-        messages.success(self.request, 'Please Confirm your email to complete registration.')
-        return redirect(reverse('login'))
-        # return render(self.request, self.template_name, {'form': form})
+        messages.success(self.request, 'Please Confirm your email to change password.')
+        return redirect(reverse('change_password'))
+
+
+class ChangePassword(FormView):
+    form_class = ChangePasswordForm
+    template_name = 'user/change_password.html'
+    success_url = 'home'
+
+    # def form_valid(self, form):
+    #     email = form.cleaned_data['email']
+    #     u = User.objects.get(username='john')
+    #     u.set_password('new password')
+    #     u.save()
 
 
 @login_required(login_url='login')
 def home(request):
     return render(request, 'user/home.html')
 
-
-# Create your views here.
