@@ -1,24 +1,24 @@
 {% extends "layout/_base.html" %}
 {% block title %}HOME{% endblock %}
 {% block body %}
-<section>
-    <form  method="post">
-        {% csrf_token %}
-        <div class="container" >
-        <div class="row">
-          <div class="col-md-8">
-            {% for object in object_list %}
-            <div class="card card-signin my-5">
-              <div class="card-body" >
-                <a class="text-dark" href="/mail/mail_detail/{{ object.id }}" ><b>{{ object.sender }}</b></a>
-                <br><br>
-                <p class="card-text text-dark">{{ object.subject }}</p>
-              </div>
-            </div>
-            {% endfor %}
-           </div>
-        </div>
-    </div>
-    </form>
-</section>
+{#<section>#}
+{#    <form  method="post">#}
+{#        {% csrf_token %}#}
+{#        <div class="container" >#}
+{#        <div class="row">#}
+{#          <div class="col-md-8">#}
+{#            {% for object in object_list %}#}
+{#            <div class="card card-signin my-5">#}
+{#              <div class="card-body" >#}
+{#                <a class="text-dark" href="/mail/mail_detail/{{ object.id }}" ><b>{{ object.sender }}</b></a>#}
+{#                <br><br>#}
+{#                <p class="card-text text-dark">{{ object.subject }}</p>#}
+{#              </div>#}
+{#            </div>#}
+{#            {% endfor %}#}
+{#           </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    </form>#}
+{#</section>#}
 {% endblock %}

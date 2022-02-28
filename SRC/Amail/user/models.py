@@ -24,10 +24,8 @@ def user_validator(username):
 
 class User(AbstractUser):
     username = models.CharField(validators=[user_validator], max_length=30, unique=True)
-
     recovery = models.CharField(choices=RECOVERY, max_length=15, null=True)
     phone_number = models.CharField(max_length=12, null=True, blank=True)
-
     gender = models.CharField(max_length=1, choices=GENDER, null=True, blank=True)
     birth_date = models.DateTimeField(null=True, blank=True)
     country = models.CharField(max_length=50, null=True, blank=True)

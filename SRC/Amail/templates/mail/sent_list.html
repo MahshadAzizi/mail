@@ -2,7 +2,7 @@
 {% block title %}InboxList{% endblock %}
 {% block body %}
 <section>
-    <form action="/mail/inbox_list/" method="post">
+    <form method="post">
         {% csrf_token %}
         <div class="container" >
         <div class="row">
@@ -10,7 +10,7 @@
             {% for object in object_list %}
             <div class="card card-signin my-5">
               <div class="card-body" >
-                <a class="text-dark" href="/mail/mail_detail/{{ object.id }}" ><b>{{ object.user.sender }}</b></a>
+                <a class="text-dark" href="/mail/sent_detail/{{ object.id }}" ><b>{{ object.username }}</b></a>
                 <br><br>
                 <p class="card-text text-dark">{{ object.subject }}</p>
               </div>

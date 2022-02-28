@@ -35,22 +35,56 @@ from .models import *
 class InboxList(LoginRequiredMixin, ListView):
     """Return list of email inbox"""
     model = Amail
-    template_name = 'user/home.html'
+    template_name = 'mail/inbox_list.html'
     ordering = ['-mail_date']
 
     def get_context_data(self, **kwargs):
         context = super(InboxList, self).get_context_data(**kwargs)
+        user = get_object_or_404(User, username=self.kwargs.get('username'))
+        context['receiver'] = user
+        return context
+
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.kwargs.get('username'))
+        return Amail.objects.filter(receiver=user).order_by('-mail_date')
+
+
+class InboxDetail(DetailView):
+    """Return detail of inbox"""
+    model = Amail
+    context_object_name = 'amail'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs["pk"]
+
+        user = get_object_or_404(User, pk=pk)
+        receiver = user.amail_receiver.all()
+
+        context['receiver'] = receiver
+        # context['user'] = user
+        return context
+
+
+class SentList(LoginRequiredMixin, ListView):
+    """Return list of email inbox"""
+    model = Amail
+    template_name = 'mail/sent_list.html'
+    ordering = ['-mail_date']
+
+    def get_context_data(self, **kwargs):
+        context = super(SentList, self).get_context_data(**kwargs)
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         context['sender'] = user
         return context
 
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
-        return Amail.objects.filter(user_name=user).order_by('-mail_date')
+        return Amail.objects.filter(senderw=user).order_by('-mail_date')
 
 
-class InboxDetail(DetailView):
-    """Return detail of inbox"""
+class SentDetail(DetailView):
+    """Return detail of sent"""
     model = Amail
     context_object_name = 'amail'
 
@@ -86,7 +120,7 @@ def new_amail(request):
             data = form.save(commit=False)
             data.sender = user
             data.save()
-            messages.success(request, f'send Successfully')
+            messages.success(request, f'send mail Successfully')
             return redirect('home')
     else:
         form = NewAmailForm()
