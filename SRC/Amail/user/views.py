@@ -40,7 +40,6 @@ class SignUpView(FormView):
 
 
 class ActivateAccount(View):
-
     def get(self, request, uidb64, token, *args, **kwargs):
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
@@ -63,6 +62,11 @@ class LogInView(FormView):
     form_class = LogInForm
     template_name = 'user/login.html'
     success_url = 'home'
+
+    def get(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('home')
+        return self.render_to_response(self.get_context_data())
 
     def form_valid(self, form):
         user = authenticate(self.request, **form.cleaned_data)
@@ -136,4 +140,3 @@ class ChangePassword(FormView):
 @login_required(login_url='login')
 def home(request):
     return render(request, 'user/home.html')
-

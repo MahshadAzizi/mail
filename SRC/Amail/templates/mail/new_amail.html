@@ -1,26 +1,60 @@
 {% extends "layout/_base.html" %}
 {% block title %}NEW AMAIL{% endblock %}
 {% if messages %}
-        {% for message in messages %}
-            <!-- Success alert -->
-            <div class="container fixed-top">
-                <div class="py-md-4">
-                    <div class="alert d-flex alert-success" role="alert">
-                        <i class="ai-check-circle fs-xl me-3"></i>
-                        <div>
-                            {{ message }}
-                        </div>
+    {% for message in messages %}
+        <!-- Success alert -->
+        <div class="container fixed-top">
+            <div class="py-md-4">
+                <div class="alert d-flex alert-success" role="alert">
+                    <i class="ai-check-circle fs-xl me-3"></i>
+                    <div>
+                        {{ message }}
                     </div>
                 </div>
             </div>
-        {% endfor %}
+        </div>
+    {% endfor %}
 {% endif %}
 {% block body %}
-    <center>
-    <form action="/mail/new_amail/" method="post" enctype="multipart/form-data">
+<center>
+    <form action="{% url 'new_amail' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_ul }}
-         <input type="submit" value="send">
+        <p>To: <label>
+            {{ form.receiver }}
+        </label></p>
+
+        <br>
+        <p>Subject: <label>
+            {{ form.subject }}
+        </label></p>
+
+        <br>
+        <p>body: <label>
+            {{ form.body }}
+        </label></p>
+        <br>
+        <p>add file: <label>
+            {{ form.file }}
+        </label></p>
+
+         <input style="padding: 10px 80px;
+            border: none;
+            border-radius: 20px;
+            background-image: linear-gradient(to right, rgb(235, 62, 235), rgb(92, 92, 238));
+            color: white;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.3s;" type="submit" value="send">
+         <input style="padding: 10px 80px;
+            border: none;
+            border-radius: 20px;
+            background-image: linear-gradient(to right, rgb(235, 62, 235), rgb(92, 92, 238));
+            color: white;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.3s;" type="submit" value="save">
     </form>
-    </center>
+</center>
 {% endblock %}

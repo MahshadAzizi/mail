@@ -39,4 +39,4 @@ class Amail(models.Model):
     is_read = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.sender) + str(self.subject)
+        return str(self.sender) + " - " + str(self.subject)
