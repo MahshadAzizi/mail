@@ -1,9 +1,9 @@
 {% extends "layout/_base.html" %}
-{% block title %}InboxList{% endblock %}
+{% block title %}Sent List{% endblock %}
 {% block body %}
 <center>
-        <div class="card">
-            <div class="card-body" style="border-radius: 3px;background-color: lightgray">
+        <div class="card" style="border-radius: 3px;background-color: lightgray; border-color: white">
+            <div class="card-body" >
                 {% for mail in mails %}
                     {% for resiver in mail.receiver.all %}
                         <h5 class="card-title" style="color: blueviolet">
@@ -11,10 +11,10 @@
                             {{ resiver }}</a>
                         </h5>
                     {% endfor %}
-
                     <p class="card-text" style="color: blueviolet">{{ mail.subject }}</p>
                     <p class="card-text" style="color: blueviolet"><small
                             class="text-muted">{{ mail.mail_date }}</small></p>
+                <br><br>
                 {% endfor %}
             </div>
         </div>

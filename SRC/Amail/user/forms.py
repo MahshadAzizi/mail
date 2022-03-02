@@ -69,6 +69,10 @@ class ForgetPasswordForm(forms.Form):
 
 
 class ChangePasswordForm(forms.Form):
+    username = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'txt', 'placeholder': 'password'
+    }))
+
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'txt', 'placeholder': 'password'
     }))

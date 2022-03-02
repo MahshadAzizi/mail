@@ -16,14 +16,6 @@ class Category(models.Model):
         return self.name
 
 
-# class Signature(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     text = models.TextField(max_length=100, null=True)
-#
-#     def __str__(self):
-#         return self.text
-
-
 class Amail(models.Model):
     sender = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='amail_sender')
     receiver = models.ManyToManyField(User, related_name='amail_receiver')
@@ -32,7 +24,7 @@ class Amail(models.Model):
     mail_date = models.DateTimeField(auto_now=True)
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, null=True, blank=True)
     archive = models.BooleanField(null=True, default=False)
-    file = models.FileField(validators=[file_size], null=True, upload_to='media/', blank=True)
+    file = models.FileField(validators=[file_size], null=True, upload_to='documents/', blank=True)
     signature = models.TextField(max_length=255, null=True, blank=True)
     trash = models.BooleanField(null=True, default=False)
     reply = models.ForeignKey('Amail', on_delete=models.DO_NOTHING, null=True, blank=True)

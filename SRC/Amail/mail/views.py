@@ -47,8 +47,8 @@ class SentList(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        print(
-            Amail.objects.filter(sender=self.request.user).order_by('-mail_date').prefetch_related('receiver').first())
+        # print(
+        #     Amail.objects.filter(sender=self.request.user).order_by('-mail_date').prefetch_related('receiver').first())
         return Amail.objects.filter(sender=self.request.user).order_by('-mail_date')
 
 
