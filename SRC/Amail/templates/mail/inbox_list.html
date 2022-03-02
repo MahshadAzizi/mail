@@ -1,24 +1,15 @@
 {% extends "layout/_base.html" %}
 {% block title %}InboxList{% endblock %}
 {% block body %}
-<section>
-    <form action="/mail/inbox_list/" method="post">
-        {% csrf_token %}
-        <div class="container" >
-        <div class="row">
-          <div class="col-md-8">
-            {% for object in object_list %}
-            <div class="card card-signin my-5">
-              <div class="card-body" >
-                <a class="text-dark" href="/mail/mail_detail/{{ object.id }}" ><b>{{ object.user.sender }}</b></a>
-                <br><br>
-                <p class="card-text text-dark">{{ object.subject }}</p>
-              </div>
-            </div>
-            {% endfor %}
-           </div>
-        </div>
+<center>
+    <div class="card">
+      <div class="card-body" style="border-radius: 3px;background-color: lightgray">
+          {% for mail in mails %}
+            <h5 class="card-title" style="color: blueviolet"><a href="{% url 'inbox_detail' pk=mail.pk %}">{{ mail.sender.username }}</a></h5>
+            <p class="card-text" style="color: blueviolet">{{ mail.subject }}</p>
+            <p class="card-text" style="color: blueviolet"><small class="text-muted">{{ mail.mail_date }}</small></p>
+          {% endfor %}
+      </div>
     </div>
-    </form>
-</section>
+</center>
 {% endblock %}

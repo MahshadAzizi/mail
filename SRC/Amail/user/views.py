@@ -64,15 +64,26 @@ class LogInView(FormView):
     template_name = 'user/login.html'
     success_url = 'home'
 
+    def get(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('home')
+        return self.render_to_response(self.get_context_data())
+
     def form_valid(self, form):
-        user = authenticate(self.request, **form.cleaned_data)
+        username = form.cleaned_data.get('username')
+        if '@Amail.com' not in username:
+            username += '@Amail.com'
+
+        password = form.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+
         if user is not None:
             login(self.request, user)
-            messages.info(self.request, f"You are now logged in as {form.username}")
+            messages.info(self.request, f"You are now logged in as {user.username}")
             return redirect('home')
 
         messages.error(self.request, "Invalid username or password.")
-        return redirect('home')
+        return self.render_to_response(self.get_context_data())
 
 
 @login_required(login_url="login")
@@ -136,4 +147,3 @@ class ChangePassword(FormView):
 @login_required(login_url='login')
 def home(request):
     return render(request, 'user/home.html')
-

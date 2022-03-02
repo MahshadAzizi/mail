@@ -2,24 +2,51 @@
 {% block title %}NEW AMAIL{% endblock %}
 {% block body %}
 {% load static %}
-    <form action="/mail/mail_detail/">
+ <center>
     <div class="container">
             <div class="row">
               <div class="col-md-8">
-                <div class="card card-signin my-5">
+                <div class="card card-signin my-5" style="background-color: lightgray; border-radius: 3px">
                   <div class="card-body">
-                    <a class="text-dark" ><b>{{ amail.receiver }}</b></a>
-                    <br><a class="text-dark" ><b>{{ amail.subject }}</b></a>
-                    <br><a class="text-dark" ><b>{{ amail.body }}</b></a>
-                    <br><small class="text-muted">send on {{ amail.mail_date }}</small>
+                    <a class="text-dark" style="color: blueviolet">{{ amail.sender.username }}</a><br>
+                    <br><a class="text-dark" style="color: blueviolet">{{ amail.subject }}</a><br>
+                    <br><a class="text-dark" style="color: blueviolet">{{ amail.body }}</a><br>
+                    <br><small class="text-muted" style="color: blueviolet">send on {{ amail.mail_date }}</small>
                     <br><br>
-                    <p class="card-text text-dark">{{ amail.description }}</p>
                   </div>
-                  <a href="{{ amail.file.url }}"><img class="card-img-top" src="{{ amail.file.url }}" alt=""></a>
+                    {% if amail.file %}
+                        <a href="{{ amail.file.url }}"><img class="card-img-top" src="{{ amail.file.url }}" alt=""></a>
+                    {% endif %}
                 </div>
                </div>
             </div>
             <br>
+            <div class="row">
+                <div class="col-md-8">
+                 <div class="card card-signin my-5">
+                  <div class="card-body">
+                      <input style="padding: 10px 80px;
+                            border: none;
+                            border-radius: 20px;
+                            background-image: linear-gradient(to right, rgb(235, 62, 235), rgb(92, 92, 238));
+                            color: white;
+                            font-weight: 700;
+                            letter-spacing: 2px;
+                            cursor: pointer;
+                            transition: 0.3s;" type="submit" name="action" value="Reply" />
+                        <input style="padding: 10px 80px;
+                                border: none;
+                                border-radius: 20px;
+                                background-image: linear-gradient(to right, rgb(235, 62, 235), rgb(92, 92, 238));
+                                color: white;
+                                font-weight: 700;
+                                letter-spacing: 2px;
+                                cursor: pointer;
+                                transition: 0.3s;" type="submit" name="action" value="Forward" />
+                  </div>
+                 </div>
+                </div>
+            </div>
 {#            <div class="row">#}
 {#                <div class="col-md-8">#}
 {#                 <div class="card card-signin my-5">#}
@@ -51,6 +78,6 @@
 
 
 
-    </div>
-</form>
+   </div>
+</center>
 {% endblock%}
