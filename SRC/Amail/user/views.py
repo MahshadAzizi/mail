@@ -136,11 +136,13 @@ class ChangePassword(FormView):
     template_name = 'user/change_password.html'
     success_url = 'home'
 
-    # def form_valid(self, form):
-    #     email = form.cleaned_data['email']
-    #     u = User.objects.get(username='john')
-    #     u.set_password('new password')
-    #     u.save()
+    def form_valid(self, form):
+        username = form.cleaned_data.get('username')
+        user = User.objects.get(username=username)
+        password = form.cleaned_data.get('password')
+        re_password = form.cleaned_data.get('re_password')
+        user.set_password(re_password)
+        user.save()
 
 
 @login_required(login_url='login')
