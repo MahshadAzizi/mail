@@ -1,13 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views import View
-from django.views.generic import ListView, DetailView, FormView
-from .forms import *
-from django.contrib.auth import authenticate, login, logout
-from .models import *
+from django.views.generic import ListView, DetailView
+from .forms import NewAmailForm
+from .models import Amail
+from user.models import User
 
 
 class InboxList(LoginRequiredMixin, ListView):
@@ -49,8 +47,9 @@ class SentList(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        user = get_object_or_404(User, username=self.request.user)
-        return Amail.objects.filter(receiver=user).order_by('-mail_date')
+        print(
+            Amail.objects.filter(sender=self.request.user).order_by('-mail_date').prefetch_related('receiver').first())
+        return Amail.objects.filter(sender=self.request.user).order_by('-mail_date')
 
 
 class SentDetail(DetailView):
@@ -70,9 +69,9 @@ def new_amail(request):
             body = form.cleaned_data['body']
             receiver = form.cleaned_data['receiver']
             file = form.cleaned_data['file']
-            # signature = form.cleaned_data['signature']
+            signature = form.cleaned_data['signature']
             sender = user
-            mail = Amail.objects.create(sender=sender, file=file, subject=subject, body=body)
+            mail = Amail.objects.create(sender=sender, file=file, subject=subject, body=body, signature=signature)
             mail.receiver.add(*receiver)
             mail.save()
 
@@ -81,5 +80,3 @@ def new_amail(request):
     else:
         form = NewAmailForm()
     return render(request, 'mail/new_amail.html', {'form': form})
-
-

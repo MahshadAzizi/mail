@@ -2,7 +2,6 @@ from django import forms
 from django.forms import ValidationError
 from .models import Amail
 from django_select2.forms import Select2MultipleWidget
-
 from user.models import User
 
 
@@ -16,7 +15,7 @@ class NewAmailForm(forms.ModelForm):
 
     class Meta:
         model = Amail
-        fields = ['body', 'subject', 'file']
+        fields = ['body', 'subject', 'file', 'signature']
 
     def clean_receiver(self):
         receiver = self.cleaned_data['receiver']

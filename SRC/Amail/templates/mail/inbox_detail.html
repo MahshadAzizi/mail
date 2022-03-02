@@ -2,7 +2,7 @@
 {% block title %}NEW AMAIL{% endblock %}
 {% block body %}
 {% load static %}
-<center>
+ <center>
     <div class="container">
             <div class="row">
               <div class="col-md-8">
@@ -47,6 +47,10 @@
                  </div>
                 </div>
             </div>
+{#            <div class="row">#}
+{#                <div class="col-md-8">#}
+{#                 <div class="card card-signin my-5">#}
+{#                  <div class="card-body">#}
 {#                    {% if comments %}#}
 {#                    <h3 class="card-text text-dark">Comment{{ comments.count|pluralize }}: {{ comments.count }}</h3>#}
 {#                    {% for comment in comments %}#}
@@ -74,6 +78,6 @@
 
 
 
-    </div>
+   </div>
 </center>
 {% endblock%}
