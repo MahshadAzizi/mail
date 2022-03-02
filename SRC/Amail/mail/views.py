@@ -66,13 +66,16 @@ def new_amail(request):
     if request.method == "POST":
         form = NewAmailForm(request.POST, request.FILES)
         if form.is_valid():
-            data = form.cleaned_data
-            # subject = form.cleaned_data['subject']
-            # body = form.cleaned_data['body']
-            # receiver = form.cleaned_data['receiver']
-            # file = form.cleaned_data['file']
+            subject = form.cleaned_data['subject']
+            body = form.cleaned_data['body']
+            receiver = form.cleaned_data['receiver']
+            file = form.cleaned_data['file']
             # signature = form.cleaned_data['signature']
-            # sender = user
+            sender = user
+            mail = Amail.objects.create(sender=sender, file=file, subject=subject, body=body)
+            mail.receiver.add(*receiver)
+            mail.save()
+
             messages.success(request, f'send mail Successfully')
             return redirect('home')
     else:
@@ -80,16 +83,3 @@ def new_amail(request):
     return render(request, 'mail/new_amail.html', {'form': form})
 
 
-class NewAmailView(LoginRequiredMixin, FormView):
-    template_name = 'mail/new_amail.html'
-    form_class = NewAmailForm
-
-    def get_initial(self):
-        initial = super().get_initial()
-        initial['receiver'] = self.request.user.receiver.all()
-        return initial
-
-    def form_valid(self, form):
-        subs = form.cleaned_data['receiver']
-        self.request.user.receiver.add(*subs)
-        return redirect('home')
