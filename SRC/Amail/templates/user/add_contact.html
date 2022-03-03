@@ -1,0 +1,12 @@
+{% extends "layout/_base.html" %}
+{% block title %}HOME{% endblock %}
+{% block body %}
+<center>
+    <form action="{% url 'add_contact' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_ul }}
+        <br>
+        <button type="submit">AddContact</button>
+    </form>
+</center>
+{% endblock %}

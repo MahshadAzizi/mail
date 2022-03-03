@@ -33,6 +33,23 @@ class InboxDetail(DetailView):
     template_name = 'mail/inbox_detail.html'
 
 
+def inbox_detail(request, mail_pk):
+    mail = Amail.objects.filter(pk=mail_pk).first()
+    new_mail = []
+
+    while True:
+        if mail.reply is not None:
+            break
+        else:
+            new_mail.append(mail)
+            mail = mail.reply
+
+    context = {
+        'amail': mail
+    }
+    return render(request, 'mail/inbox_detail.html', context)
+
+
 class SentList(LoginRequiredMixin, ListView):
     """Return list of email sent"""
     model = Amail
@@ -47,8 +64,6 @@ class SentList(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        # print(
-        #     Amail.objects.filter(sender=self.request.user).order_by('-mail_date').prefetch_related('receiver').first())
         return Amail.objects.filter(sender=self.request.user).order_by('-mail_date')
 
 
@@ -75,7 +90,7 @@ def new_amail(request):
             mail.receiver.add(*receiver)
             mail.save()
 
-            messages.success(request, f'send mail Successfully')
+            messages.success(request, 'send mail Successfully')
             return redirect('home')
     else:
         form = NewAmailForm()

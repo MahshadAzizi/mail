@@ -44,7 +44,7 @@ class OtpCode(models.Model):
     created = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.phone_number} - {self.code} - {self.created}'
+        return "{} - {} - {}".format(self.phone_number, self.code, self.created)
 
 
 class ContactBook(models.Model):

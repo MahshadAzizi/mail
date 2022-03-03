@@ -1,0 +1,20 @@
+{% extends "layout/_base.html" %}
+{% block title %}contact DetailL{% endblock %}
+{% block body %}
+{% load static %}
+ <center>
+    <div class="container">
+            <div class="row">
+              <div class="col-md-8">
+                <div class="card card-signin my-5" style="background-color: lightgray; border-radius: 3px">
+                  <div class="card-body">
+                    <a class="text-dark" style="color: blueviolet">{{ contact.user.username }}</a><br>
+                </div>
+               </div>
+              </div>
+            </div>
+            <br>
+
+   </div>
+</center>
+{% endblock%}
