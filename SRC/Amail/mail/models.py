@@ -27,7 +27,7 @@ class Amail(models.Model):
     file = models.FileField(validators=[file_size], null=True, upload_to='documents/', blank=True)
     signature = models.TextField(max_length=255, null=True, blank=True)
     trash = models.BooleanField(null=True, default=False)
-    reply = models.ForeignKey('Amail', on_delete=models.DO_NOTHING, null=True, blank=True)
+    reply = models.ManyToManyField('Amail')
     is_read = models.BooleanField(default=False)
 
     def __str__(self):

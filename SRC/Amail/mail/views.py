@@ -1,9 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
-from .forms import NewAmailForm
+from .forms import NewAmailForm, ReplyForm
 from .models import Amail
 from user.models import User
 
@@ -26,26 +27,26 @@ class InboxList(LoginRequiredMixin, ListView):
         return Amail.objects.filter(receiver=user).order_by('-mail_date')
 
 
-class InboxDetail(DetailView):
-    """Return detail of inbox"""
-    model = Amail
-    context_object_name = 'amail'
-    template_name = 'mail/inbox_detail.html'
+def inbox_detail(request, pk):
+    mail = Amail.objects.filter(pk=pk).first()
 
+    if mail is None:
+        Http404('mail not found')
 
-def inbox_detail(request, mail_pk):
-    mail = Amail.objects.filter(pk=mail_pk).first()
-    new_mail = []
-
+    reply_mail_dict = dict()
+    unchecked = [mail]
     while True:
-        if mail.reply is not None:
+        check = unchecked.pop(0)
+        reply_mail_dict[check.pk] = []
+        for item in check.reply.all():
+            reply_mail_dict[check.pk].append(item)
+            unchecked.append(item)
+        if len(unchecked) == 0:
             break
-        else:
-            new_mail.append(mail)
-            mail = mail.reply
 
     context = {
-        'amail': mail
+        'amail': mail,
+        'reply_mail_dict': reply_mail_dict
     }
     return render(request, 'mail/inbox_detail.html', context)
 
@@ -95,3 +96,31 @@ def new_amail(request):
     else:
         form = NewAmailForm()
     return render(request, 'mail/new_amail.html', {'form': form})
+
+
+def reply(request, pk):
+    if request.method == "GET":
+        form = ReplyForm()
+        return render(request, 'mail/reply.html', {"form": form})
+
+    if request.method == "POST":
+        mail = Amail.objects.filter(pk=pk).first()
+        user = request.user
+        form = ReplyForm(request.POST, request.FILES)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            body = form.cleaned_data['body']
+            receiver = form.cleaned_data['receiver']
+            file = form.cleaned_data['file']
+            signature = form.cleaned_data['signature']
+            reply = form.cleaned_data['reply']
+            sender = user
+            mail = Amail.objects.create(sender=sender, file=file, subject=subject, body=body, signature=signature)
+            mail.receiver.add(*receiver)
+            mail.receiver.add(*reply)
+            mail.save()
+            messages.success(request, 'send mail Successfully')
+            return redirect('home')
+        else:
+            form = ReplyForm()
+        return render(request, 'mail/reply.html', {'form': form})

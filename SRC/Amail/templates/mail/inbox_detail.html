@@ -17,36 +17,81 @@
                     {% if amail.file %}
                         <a href="{{ amail.file.url }}"><img class="card-img-top" src="{{ amail.file.url }}" alt=""></a>
                     {% endif %}
+                        <div class="row">
+                        <div class="col-md-8">
+                         <div class="card card-signin my-5">
+                          <div class="card-body">
+                            <input style="padding: 10px 80px;
+                                        border: none;
+                                        border-radius: 20px;
+                                        background-image: linear-gradient(to right, rgb(235, 62, 235), rgb(92, 92, 238));
+                                        color: white;
+                                        font-weight: 700;
+                                        letter-spacing: 2px;
+                                        cursor: pointer;
+                                        transition: 0.3s;" type="submit" name="action" value="Reply" />
+                            <input style="padding: 10px 80px;
+                                        border: none;
+                                        border-radius: 20px;
+                                        background-image: linear-gradient(to right, rgb(235, 62, 235), rgb(92, 92, 238));
+                                        color: white;
+                                        font-weight: 700;
+                                        letter-spacing: 2px;
+                                        cursor: pointer;
+                                        transition: 0.3s;" type="submit" name="action" value="Forward" />
+                          </div>
+                         </div>
+                        </div>
+                    </div>
                 </div>
                </div>
             </div>
             <br>
-            <div class="row">
-                <div class="col-md-8">
-                 <div class="card card-signin my-5">
-                  <div class="card-body">
-                      <input style="padding: 10px 80px;
-                            border: none;
-                            border-radius: 20px;
-                            background-image: linear-gradient(to right, rgb(235, 62, 235), rgb(92, 92, 238));
-                            color: white;
-                            font-weight: 700;
-                            letter-spacing: 2px;
-                            cursor: pointer;
-                            transition: 0.3s;" type="submit" name="action" value="Reply" />
-                        <input style="padding: 10px 80px;
-                                border: none;
-                                border-radius: 20px;
-                                background-image: linear-gradient(to right, rgb(235, 62, 235), rgb(92, 92, 238));
-                                color: white;
-                                font-weight: 700;
-                                letter-spacing: 2px;
-                                cursor: pointer;
-                                transition: 0.3s;" type="submit" name="action" value="Forward" />
-                  </div>
-                 </div>
-                </div>
-            </div>
+            <br>
+
+            {% for key,val in reply_mail_dict.items %}
+                {% for mail in val %}
+                    <div {% if request.user.username == mail.sender.username %}style="background-color: #81d4fa" {% endif %}>
+                        <p>sender: {{ mail.sender }}</p>
+                        <br><small class="text-muted" style="color: blueviolet">send on {{ mail.mail_date }}</small>
+                        <p>{{ mail.subject }}</p>
+                        <p>{{ mail.body }}</p>
+                        {% if mail.file %}
+                            <a href="{{ mail.file.url }}">
+                                <img class="card-img-top" src="{{ mail.file.url }}" alt="">
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                         <div class="card card-signin my-5">
+                          <div class="card-body">
+
+                              <input style="padding: 10px 80px;
+                                        border: none;
+                                        border-radius: 20px;
+                                        background-image: linear-gradient(to right, rgb(235, 62, 235), rgb(92, 92, 238));
+                                        color: white;
+                                        font-weight: 700;
+                                        letter-spacing: 2px;
+                                        cursor: pointer;
+                                        transition: 0.3s;" type="submit" name="action" value="Reply" />
+                                <input style="padding: 10px 80px;
+                                        border: none;
+                                        border-radius: 20px;
+                                        background-image: linear-gradient(to right, rgb(235, 62, 235), rgb(92, 92, 238));
+                                        color: white;
+                                        font-weight: 700;
+                                        letter-spacing: 2px;
+                                        cursor: pointer;
+                                        transition: 0.3s;" type="submit" name="action" value="Forward" />
+
+                          </div>
+                         </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endfor %}
    </div>
 </center>
 {% endblock%}
