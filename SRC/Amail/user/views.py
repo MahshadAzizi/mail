@@ -3,12 +3,14 @@ from .token import account_activation_token
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import FormView, View
 from .forms import *
 from .models import *
+from django.views.generic import ListView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
@@ -78,7 +80,7 @@ class LogInView(FormView):
 
         if user is not None:
             login(self.request, user)
-            messages.info(self.request, f"You are now logged in as {user.username}")
+            messages.info(self.request, "You are now logged in as {}".format(user.username))
             return redirect('home')
 
         messages.error(self.request, "Invalid username or password.")
@@ -115,7 +117,7 @@ class ForgotPassword(FormView):
     success_url = 'change_password'
 
     def form_valid(self, form):
-        user: User = form.cleaned_data.get('email')
+        user = form.cleaned_data.get('email')
         user.is_active = False
         user.save()
         current_site = get_current_site(self.request)
@@ -148,3 +150,39 @@ class ChangePassword(FormView):
 @login_required(login_url='login')
 def home(request):
     return render(request, 'user/home.html')
+
+
+class AddContact(LoginRequiredMixin, FormView):
+    form_class = AddContactForm
+    template_name = 'user/add_contact.html'
+    success_url = 'home'
+
+    def form_valid(self, form):
+        user = self.request.user.username
+        contact = ContactBook.objects.create(user=user)
+        contact.receiver.add(*contact)
+        contact.save()
+
+
+class ContactList(LoginRequiredMixin, ListView):
+    """Return list of email contact"""
+    model = ContactBook
+    template_name = 'user/contact_list.html'
+    context_object_name = 'contacts'
+
+    def get_context_data(self, **kwargs):
+        context = super(ContactList, self).get_context_data(**kwargs)
+        user = get_object_or_404(User, username=self.request.user)
+        context['user'] = user
+        return context
+
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.request.user)
+        return ContactBook.objects.filter(user=user)
+
+
+class ContactDetail(LoginRequiredMixin,DetailView):
+    """Return detail of contact"""
+    model = ContactBook
+    context_object_name = 'contact'
+    template_name = 'user/contact_detail.html'

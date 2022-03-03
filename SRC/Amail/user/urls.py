@@ -10,6 +10,8 @@ urlpatterns = [
     path('activate/<uidb64>/<token>/', ActivateAccountForgotPassword.as_view(), name='activate_password'),
     path('forgot_password/', ForgotPassword.as_view(), name='forgot_password'),
     path('change_password/', ChangePassword.as_view(), name='change_password'),
-
+    path('add_contact/', AddContact.as_view(), name='add_contact'),
+    path('contact_list/', ContactList.as_view(), name='contact_list'),
+    path('contact_detail/<int:pk>', ContactDetail.as_view(), name='contact_detail'),
 
 ]

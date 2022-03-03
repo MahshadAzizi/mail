@@ -1,0 +1,17 @@
+{% extends "layout/_base.html" %}
+{% block title %}contact List{% endblock %}
+{% block body %}
+<center>
+    {% for contact in contacts %}
+        <div class="card" >
+          <div class="card-body" style="border-radius: 3px;background-color: lightgray;">
+            <h5 class="card-title" style="color: blueviolet;width: 200px"><a href="{% url 'contact_detail' pk=contact.pk %}">
+                {{ contact.user.username }}</a></h5>
+{#            <p class="card-text" style="color: blueviolet;width: 200px">{{ contact.name }}</p>#}
+
+          {% endfor %}
+      </div>
+    </div>
+<a href="{% url 'add_contact'%}"><h3>AddContact</h3></a>
+</center>
+{% endblock %}

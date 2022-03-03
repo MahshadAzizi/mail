@@ -2,12 +2,13 @@
 {% block title %}Inbox List{% endblock %}
 {% block body %}
 <center>
-    <div class="card">
-      <div class="card-body" style="border-radius: 3px;background-color: lightgray">
-          {% for mail in mails %}
-            <h5 class="card-title" style="color: blueviolet"><a href="{% url 'inbox_detail' pk=mail.pk %}">{{ mail.sender.username }}</a></h5>
-            <p class="card-text" style="color: blueviolet">{{ mail.subject }}</p>
-            <p class="card-text" style="color: blueviolet"><small class="text-muted">{{ mail.mail_date }}</small></p>
+    {% for mail in mails %}
+        <div class="card" >
+          <div class="card-body" style="border-radius: 3px;background-color: lightgray;">
+            <h5 class="card-title" style="color: blueviolet;width: 200px"><a href="{% url 'inbox_detail' pk=mail.pk %}">
+                {{ mail.sender.username }}</a></h5>
+            <p class="card-text" style="color: blueviolet;width: 200px">{{ mail.subject }}</p>
+            <p class="card-text" style="color: blueviolet;flex-grow: 1"><small class="text-muted">{{ mail.mail_date }}</small></p>
           {% endfor %}
       </div>
     </div>

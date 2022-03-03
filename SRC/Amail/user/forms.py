@@ -1,5 +1,7 @@
 from django import forms
 from .models import *
+from django.forms import ValidationError
+from django_select2.forms import Select2MultipleWidget
 
 
 class SignUpForm(forms.ModelForm):
@@ -89,3 +91,22 @@ class ChangePasswordForm(forms.Form):
             ValidationError('not same')
 
         return re_password
+
+
+class AddContactForm(forms.Form):
+    contact = forms.ModelMultipleChoiceField(
+        queryset=User.objects.all(),
+        widget=Select2MultipleWidget(
+            attrs={'style': 'max-width: 400px;'}
+        )
+    )
+
+    def clean_contact(self):
+        contact = self.cleaned_data['contact']
+        contacts = []
+        for c in contact:
+            user = User.objects.filter(username=c).first()
+            if user is None:
+                raise ValidationError('user by this username not found')
+            contacts.append(user)
+        return contacts
