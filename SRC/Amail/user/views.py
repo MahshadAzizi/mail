@@ -3,13 +3,13 @@ from .token import account_activation_token
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.contrib import messages
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import FormView, View
 from .forms import *
 from .models import *
-from django.views.generic import ListView, DetailView
+from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -156,33 +156,41 @@ def home(request):
 class AddContact(LoginRequiredMixin, FormView):
     form_class = AddContactForm
     template_name = 'user/add_contact.html'
-    success_url = 'home'
+    success_url = 'contact_list'
 
     def form_valid(self, form):
-        user = self.request.user.username
-        contact = ContactBook.objects.create(user=user)
-        contact.receiver.add(*contact)
-        contact.save()
+        user = self.request.user
+        user = user
+        birth_date = form.cleaned_data.get('birth_date')
+        first_name = form.cleaned_data.get('first_name')
+        last_name = form.cleaned_data.get('last_name')
+        email = form.cleaned_data.get('email')
+        phone_number = form.cleaned_data.get('phone_number')
+        username = form.cleaned_data.get('username')
+        if '@Amail.com' not in username:
+            username += '@Amail.com'
+        if User.objects.filter(username=username).exists():
+            contact_book = ContactBook.objects.create(user=user, username=username, first_name=first_name,
+                                                      last_name=last_name, email=email, phone_number=phone_number,
+                                                      birth_date=birth_date)
+            contact_book.save()
+            return redirect('contact_list')
+        else:
+            messages.error(self.request, 'user does not exist!!')
+            return redirect('contact_list')
 
 
-class ContactList(LoginRequiredMixin, ListView):
+class ContactList(LoginRequiredMixin, View):
     """Return list of email contact"""
     model = ContactBook
     template_name = 'user/contact_list.html'
-    context_object_name = 'contacts'
 
-    def get_context_data(self, **kwargs):
-        context = super(ContactList, self).get_context_data(**kwargs)
-        user = get_object_or_404(User, username=self.request.user)
-        context['user'] = user
-        return context
-
-    def get_queryset(self):
-        user = get_object_or_404(User, username=self.request.user)
-        return ContactBook.objects.filter(user=user)
+    def get(self, request):
+        all_contact = ContactBook.objects.filter(user=request.user.id)
+        return render(request, self.template_name, {"all_contact": all_contact})
 
 
-class ContactDetail(LoginRequiredMixin,DetailView):
+class ContactDetail(LoginRequiredMixin, DetailView):
     """Return detail of contact"""
     model = ContactBook
     context_object_name = 'contact'

@@ -1,0 +1,16 @@
+{% extends "layout/_base.html" %}
+{% block title %}Category List{% endblock %}
+{% block body %}
+<center>
+    {% for category in all_category %}
+        <div class="card" >
+          <div class="card-body" style="border-radius: 3px;background-color: lightgray;">
+            <h5 class="card-title" style="color: blueviolet;width: 100px; font-weight: bold">
+                <a href="{% url 'category_detail' pk=category.pk %}">
+                {{ category.name }}</a></h5>
+          {% endfor %}
+      </div>
+    </div>
+<a href="{% url 'add_category'%}"><h3>AddCategory</h3></a>
+</center>
+{% endblock %}

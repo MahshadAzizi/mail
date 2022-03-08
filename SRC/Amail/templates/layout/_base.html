@@ -155,7 +155,7 @@
 
         </li>
         <li class="has-subnav">
-            <a href="#">
+            <a href="{% url 'draft' %}">
                <i class="fa fa-list fa-2x"></i>
                 <span class="nav-text">
                     Draft
@@ -173,7 +173,7 @@
 
         </li>
         <li>
-            <a href="#">
+            <a href="{% url 'archive'%}">
                 <i class="fa fa-bar-chart-o fa-2x"></i>
                 <span class="nav-text">
                     Archive
@@ -181,7 +181,7 @@
             </a>
         </li>
         <li>
-            <a href="#">
+            <a href="{% url 'trash' %}">
                 <i class="fa fa-font fa-2x"></i>
                 <span class="nav-text">
                    Trash
@@ -197,10 +197,10 @@
             </a>
         </li>
         <li>
-           <a href="#">
+           <a href="{% url 'category_list' %}">
                 <i class="fa fa-map-marker fa-2x"></i>
                 <span class="nav-text">
-                    Maps
+                    labels
                 </span>
             </a>
         </li>

@@ -49,4 +49,9 @@ class OtpCode(models.Model):
 
 class ContactBook(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    contact = models.ManyToManyField(User, related_name='contact')
+    username = models.CharField(max_length=100, null=True)
+    first_name = models.CharField(max_length=40, null=True, blank=True)
+    last_name = models.CharField(max_length=40, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    phone_number = models.CharField(max_length=12, null=True, blank=True)
+    birth_date = models.DateField(null=True, blank=True)

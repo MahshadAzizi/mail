@@ -93,20 +93,23 @@ class ChangePasswordForm(forms.Form):
         return re_password
 
 
-class AddContactForm(forms.Form):
-    contact = forms.ModelMultipleChoiceField(
-        queryset=User.objects.all(),
-        widget=Select2MultipleWidget(
-            attrs={'style': 'max-width: 400px;'}
-        )
-    )
-
-    def clean_contact(self):
-        contact = self.cleaned_data['contact']
-        contacts = []
-        for c in contact:
-            user = User.objects.filter(username=c).first()
-            if user is None:
-                raise ValidationError('user by this username not found')
-            contacts.append(user)
-        return contacts
+class AddContactForm(forms.ModelForm):
+    class Meta:
+        model = ContactBook
+        fields = ['username', 'first_name', 'last_name', 'email', 'phone_number', 'birth_date']
+    # contact = forms.ModelMultipleChoiceField(
+    #     queryset=User.objects.all(),
+    #     widget=Select2MultipleWidget(
+    #         attrs={'style': 'max-width: 400px;'}
+    #     )
+    # )
+    #
+    # def clean_contact(self):
+    #     contact = self.cleaned_data['contact']
+    #     contacts = []
+    #     for c in contact:
+    #         user = User.objects.filter(username=c).first()
+    #         if user is None:
+    #             raise ValidationError('user by this username not found')
+    #         contacts.append(user)
+    #     return contacts

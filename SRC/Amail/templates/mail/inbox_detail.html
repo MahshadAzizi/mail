@@ -21,7 +21,7 @@
                         <div class="col-md-8">
                          <div class="card card-signin my-5">
                           <div class="card-body">
-                            <input style="padding: 10px 80px;
+                            <a href="{% url 'reply' pk=amail.pk %}"><input style="padding: 10px 80px;
                                         border: none;
                                         border-radius: 20px;
                                         background-image: linear-gradient(to right, rgb(235, 62, 235), rgb(92, 92, 238));
@@ -29,8 +29,8 @@
                                         font-weight: 700;
                                         letter-spacing: 2px;
                                         cursor: pointer;
-                                        transition: 0.3s;" type="submit" name="action" value="Reply" />
-                            <input style="padding: 10px 80px;
+                                        transition: 0.3s;" type="submit" name="reply" value="Reply" /></a>
+                            <a href="{% url 'forward' pk=amail.pk %}"><input style="padding: 10px 80px;
                                         border: none;
                                         border-radius: 20px;
                                         background-image: linear-gradient(to right, rgb(235, 62, 235), rgb(92, 92, 238));
@@ -38,7 +38,10 @@
                                         font-weight: 700;
                                         letter-spacing: 2px;
                                         cursor: pointer;
-                                        transition: 0.3s;" type="submit" name="action" value="Forward" />
+                                        transition: 0.3s;" type="submit" name="forward" value="Forward" /></a>
+                            <a href="{% url 'trash_mail' pk=amail.pk %}" style="color: blueviolet"><h5>Trash</h5></a>
+                            <a href="{% url 'archive_mail' pk=amail.pk %}" style="color: blueviolet"><h5>Archive</h5></a>
+                            <a href="{% url 'add_category_mail' pk=amail.pk %}" style="color: blueviolet"><h5>AddCategory</h5></a>
                           </div>
                          </div>
                         </div>
@@ -48,7 +51,6 @@
             </div>
             <br>
             <br>
-
             {% for key,val in reply_mail_dict.items %}
                 {% for mail in val %}
                     <div {% if request.user.username == mail.sender.username %}style="background-color: #81d4fa" {% endif %}>
@@ -66,8 +68,7 @@
                         <div class="col-md-8">
                          <div class="card card-signin my-5">
                           <div class="card-body">
-
-                              <input style="padding: 10px 80px;
+                              <a href="{% url 'reply' pk=mail.pk %}"><input style="padding: 10px 80px;
                                         border: none;
                                         border-radius: 20px;
                                         background-image: linear-gradient(to right, rgb(235, 62, 235), rgb(92, 92, 238));
@@ -75,8 +76,8 @@
                                         font-weight: 700;
                                         letter-spacing: 2px;
                                         cursor: pointer;
-                                        transition: 0.3s;" type="submit" name="action" value="Reply" />
-                                <input style="padding: 10px 80px;
+                                        transition: 0.3s;" type="submit" name="reply" value="Reply" /></a>
+                              <a href="{% url 'forward' pk=mail.pk %}"><input style="padding: 10px 80px;
                                         border: none;
                                         border-radius: 20px;
                                         background-image: linear-gradient(to right, rgb(235, 62, 235), rgb(92, 92, 238));
@@ -84,14 +85,17 @@
                                         font-weight: 700;
                                         letter-spacing: 2px;
                                         cursor: pointer;
-                                        transition: 0.3s;" type="submit" name="action" value="Forward" />
-
+                                        transition: 0.3s;" type="submit" name="forward" value="forward" /></a>
+                              <a href="{% url 'trash_mail' pk=amail.pk %}" style="color: blueviolet"><h5>Trash</h5></a>
+                              <a href="{% url 'archive_mail' pk=amail.pk %}" style="color: blueviolet"><h5>Archive</h5></a>
+                              <a href="{% url 'add_category_mail' pk=amail.pk %}" style="color: blueviolet"><h5>AddCategory</h5></a>
                           </div>
                          </div>
                         </div>
                     </div>
                 {% endfor %}
             {% endfor %}
+
    </div>
 </center>
 {% endblock%}
