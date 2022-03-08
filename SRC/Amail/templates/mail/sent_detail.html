@@ -14,13 +14,15 @@
                     <br><small class="text-muted" style="color: blueviolet">send on {{ mail.mail_date }}</small>
                     <br><br>
                   </div>
-                    {% if amail.file %}
-                        <a href="{{ amail.file.url }}"><img class="card-img-top" src="{{ amail.file.url }}" alt=""></a>
+                    {% if mail.file %}
+                        <a href="{{ mail.file.url }}"><img class="card-img-top" src="{{ mail.file.url }}" alt=""></a>
                     {% endif %}
                 </div>
                </div>
             </div>
             <br>
+        <a href="{% url 'trash_mail' pk=mail.pk %}">Trash</a>
+        <a href="{% url 'archive_mail' pk=mail.pk %}">Archive</a>
     </div>
 </center>
 {% endblock%}

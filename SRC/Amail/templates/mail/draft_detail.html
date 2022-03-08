@@ -1,0 +1,28 @@
+{% extends "layout/_base.html" %}
+{% block title %}Sent Detail{% endblock %}
+{% block body %}
+{% load static %}
+ <center>
+    <div class="container">
+            <div class="row">
+              <div class="col-md-8">
+                <div class="card card-signin my-5" style="background-color: lightgray; border-radius: 3px">
+                  <div class="card-body">
+                    <a class="text-dark" style="color: blueviolet">{{ draft.receiver.username }}</a><br>
+                    <br><a class="text-dark" style="color: blueviolet">{{ draft.subject }}</a><br>
+                    <br><a class="text-dark" style="color: blueviolet">{{ draft.body }}</a><br>
+                    <br><small class="text-muted" style="color: blueviolet">send on {{ draft.mail_date }}</small>
+                    <br><br>
+                  </div>
+                    {% if draft.file %}
+                        <a href="{{ draft.file.url }}"><img class="card-img-top" src="{{ draft.file.url }}" alt=""></a>
+                    {% endif %}
+                </div>
+               </div>
+            </div>
+            <br>
+        <a href="{% url 'trash_mail' pk=draft.pk %}">Trash</a>
+        <a href="{% url 'archive_mail' pk=draft.pk %}">Archive</a>
+    </div>
+</center>
+{% endblock%}

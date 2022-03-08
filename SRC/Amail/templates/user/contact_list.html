@@ -2,11 +2,11 @@
 {% block title %}contact List{% endblock %}
 {% block body %}
 <center>
-    {% for contact in contacts %}
+    {% for contact in all_contact %}
         <div class="card" >
           <div class="card-body" style="border-radius: 3px;background-color: lightgray;">
             <h5 class="card-title" style="color: blueviolet;width: 200px"><a href="{% url 'contact_detail' pk=contact.pk %}">
-                {{ contact.user.username }}</a></h5>
+                {{ contact.username }}</a></h5>
 {#            <p class="card-text" style="color: blueviolet;width: 200px">{{ contact.name }}</p>#}
 
           {% endfor %}

@@ -1,5 +1,5 @@
 {% extends "layout/_base.html" %}
-{% block title %}AddContact{% endblock %}
+{% block title %}AddCategory{% endblock %}
 {% if messages %}
         {% for message in messages %}
             <!-- Success alert -->
@@ -17,11 +17,11 @@
     {% endif %}
 {% block body %}
 <center>
-    <form action="{% url 'add_contact' %}" method="post">
+    <form action="{% url 'add_category' %}" method="post">
             {% csrf_token %}
             {{ form.as_ul }}
         <br>
-        <button type="submit">AddContact</button>
+        <button type="submit">AddCategory</button>
     </form>
 </center>
 {% endblock %}

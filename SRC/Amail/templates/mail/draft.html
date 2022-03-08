@@ -1,0 +1,22 @@
+{% extends "layout/_base.html" %}
+{% block title %}Trash{% endblock %}
+{% block body %}
+<center>
+     <div class="card" style="border-radius: 3px;background-color: lightgray; border-color: white">
+            <div class="card-body" >
+                {% for draft in draft_mail %}
+                    {% for receiver_ in draft.receiver.all %}
+                        <h5 class="card-title" style="color: blueviolet">
+                            <a href="{% url 'draft_detail' pk=draft.pk %}">
+                            {{ receiver_ }}</a>
+                        </h5>
+                    {% endfor %}
+                    <p class="card-text" style="color: blueviolet">{{ mail.subject }}</p>
+                    <p class="card-text" style="color: blueviolet"><small
+                            class="text-muted">{{ mail.mail_date }}</small></p>
+                <br><br>
+                {% endfor %}
+            </div>
+        </div>
+</center>
+{% endblock %}

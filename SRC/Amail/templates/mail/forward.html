@@ -17,8 +17,9 @@
 {% endif %}
 {% block body %}
     <center>
-    <form action="{% url 'new_amail' %}" method="post" enctype="multipart/form-data">
+    <form  method="post" >
         {% csrf_token %}
+        <br>
         <p>To: <label>
             {{ form.receiver }}
         </label></p>
@@ -31,22 +32,6 @@
             {{ form.bcc }}
         </label></p>
         <br>
-        <p>Subject: <label>
-            {{ form.subject }}
-        </label></p>
-
-        <br>
-        <p>body: <label>
-            {{ form.body }}
-        </label></p>
-        <br>
-        <p>signature: <label>
-            {{ form.signature }}
-        </label></p>
-        <br>
-        <p>add file: <label>
-            {{ form.file }}
-        </label></p>
 
          <input style="padding: 10px 80px;
             border: none;
