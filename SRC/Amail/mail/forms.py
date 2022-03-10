@@ -107,19 +107,19 @@ class AddCategoryForm(forms.ModelForm):
 
 class AddMailToCategoryForm(forms.ModelForm):
     category = forms.ModelMultipleChoiceField(
-        queryset=Category.objects.all(),
+        queryset=Category.objects.filter(),
         widget=Select2MultipleWidget(
             attrs={'style': 'max-width: 400px;'}
         ))
 
     class Meta:
         model = Amail
-        fields = ['category']
+        fields = []
 
     def clean_category(self):
         category = self.cleaned_data['category']
         category_list = []
-        for r in category :
+        for r in category:
             category_name = Category.objects.filter(name=r).first()
             if category_name is None:
                 raise ValidationError('user by this username not found')
