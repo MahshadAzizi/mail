@@ -25,8 +25,8 @@ class Category(models.Model):
 class Amail(models.Model):
     sender = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='amail_sender')
     receiver = models.ManyToManyField(User, related_name='amail_receiver')
-    bcc = models.ManyToManyField(User, related_name='bcc')
-    cc = models.ManyToManyField(User, related_name='cc')
+    bcc = models.ManyToManyField(User, related_name='bcc', blank=True)
+    cc = models.ManyToManyField(User, related_name='cc', blank=True)
     subject = models.CharField(max_length=80, null=True, blank=True)
     body = models.TextField(max_length=255, null=True, blank=True)
     mail_date = models.DateTimeField(auto_now=True)

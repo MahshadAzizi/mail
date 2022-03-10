@@ -242,8 +242,8 @@ def add_category_mail(request, pk):
         if form.is_valid():
             mail = Amail.objects.get(pk=pk)
             category = form.cleaned_data['category']
-            mail.category = category
-            mail.objects.get(*category)
+            cat = list(Category.objects.filter(name=category[0]))
+            mail.category.add(*cat)
             mail.save()
             return redirect('inbox_list')
 
