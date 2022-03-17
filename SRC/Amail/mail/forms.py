@@ -27,7 +27,7 @@ class NewAmailForm(forms.ModelForm):
 
     class Meta:
         model = Amail
-        fields = ['body', 'subject', 'file', 'signature']
+        fields = ['body', 'subject', 'file']
 
     def clean_receiver(self):
         receiver = self.cleaned_data['receiver']
@@ -76,7 +76,7 @@ class ReplyForm(forms.ModelForm):
 
     class Meta:
         model = Amail
-        fields = ['body', 'subject', 'file', 'signature']
+        fields = ['body', 'subject', 'file']
 
     def clean_receiver(self):
         receiver = self.cleaned_data['receiver']

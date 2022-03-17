@@ -67,6 +67,7 @@ class LogInView(FormView):
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
+            messages.info(self.request, 'welcome to Amail')
             return redirect('home')
         return self.render_to_response(self.get_context_data())
 

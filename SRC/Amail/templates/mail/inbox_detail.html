@@ -11,12 +11,17 @@
                     <a class="text-dark" style="color: blueviolet">{{ amail.sender.username }}</a><br>
                     <br><a class="text-dark" style="color: blueviolet">{{ amail.subject }}</a><br>
                     <br><a class="text-dark" style="color: blueviolet">{{ amail.body }}</a><br>
+                      {% if amail.signature %}
+                            <a href="{{ amail.signature.signature }}"></a>
+                      {% endif %}
                     <br><small class="text-muted" style="color: blueviolet">send on {{ amail.mail_date }}</small>
                     <br><br>
                   </div>
                     {% if amail.file %}
-                        <a href="{{ amail.file.url }}"><img class="card-img-top" src="{{ amail.file.url }}" alt=""></a>
+                        <iframe style="width:300px; height:200px;" src="{{ mail.file.url }}" >
+                            <a href="{{ mail.file.url }}"></a></iframe>
                     {% endif %}
+
                         <div class="row">
                         <div class="col-md-8">
                          <div class="card card-signin my-5">

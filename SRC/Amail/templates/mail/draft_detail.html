@@ -15,7 +15,9 @@
                     <br><br>
                   </div>
                     {% if draft.file %}
-                        <a href="{{ draft.file.url }}"><img class="card-img-top" src="{{ draft.file.url }}" alt=""></a>
+                        <a href="{{ draft.file.url }}"><iframe class="card-img-top" src="{{ draft.file.url }}">
+
+                        </iframe></a>
                     {% endif %}
                 </div>
                </div>
