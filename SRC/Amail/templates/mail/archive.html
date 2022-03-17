@@ -2,12 +2,21 @@
 {% block title %}Archive{% endblock %}
 {% block body %}
 <center>
-    {% for archive in archive_mail %}
-        <div class="card" >
-          <div class="card-body" style="border-radius: 3px;background-color: lightgray;">
-            <h5 class="card-title" style="color: blueviolet;width: 200px">{{ archive }}</h5>
-          {% endfor %}
-      </div>
-    </div>
+     <div class="card" style="border-radius: 3px;background-color: lightgray; border-color: white">
+            <div class="card-body" >
+                {% for archive in archive_mail %}
+                    {% for receiver_ in archive.receiver.all %}
+                        <h5 class="card-title" style="color: blueviolet">
+                            <a href="{% url 'archive_detail' pk=archive.pk %}">
+                            {{ receiver_ }}</a>
+                        </h5>
+                    {% endfor %}
+                    <p class="card-text" style="color: blueviolet">{{ archive.subject }}</p>
+                    <p class="card-text" style="color: blueviolet"><small
+                            class="text-muted">{{ archive.mail_date }}</small></p>
+                <br><br>
+                {% endfor %}
+            </div>
+        </div>
 </center>
 {% endblock %}

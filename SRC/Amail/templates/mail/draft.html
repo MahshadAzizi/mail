@@ -1,5 +1,5 @@
 {% extends "layout/_base.html" %}
-{% block title %}Trash{% endblock %}
+{% block title %}Draft{% endblock %}
 {% block body %}
 <center>
      <div class="card" style="border-radius: 3px;background-color: lightgray; border-color: white">
@@ -11,10 +11,11 @@
                             {{ receiver_ }}</a>
                         </h5>
                     {% endfor %}
-                    <p class="card-text" style="color: blueviolet">{{ mail.subject }}</p>
+                    <p class="card-text" style="color: blueviolet">{{ draft.subject }}</p>
                     <p class="card-text" style="color: blueviolet"><small
-                            class="text-muted">{{ mail.mail_date }}</small></p>
+                            class="text-muted">{{ draft.mail_date }}</small></p>
                 <br><br>
+                    <hr>
                 {% endfor %}
             </div>
         </div>

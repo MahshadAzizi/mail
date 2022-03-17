@@ -90,9 +90,9 @@ def new_amail(request):
             bcc = form.cleaned_data['bcc']
             cc = form.cleaned_data['cc']
             file = form.cleaned_data['file']
-            signature = Signature.objects.filter(user=user)
-            text_signature = user.signature_set.values('signature')
-            print(user.signature_set.values_list('signature', flat=True))
+            # signature = Signature.objects.filter(user=user)
+            # text_signature = user.signature_set.values('signature')
+            # print(user.signature_set.values_list('signature', flat=True))
             sender = user
             mail = Amail.objects.create(sender=sender, status='send', file=file, subject=subject, body=body,
                                         )
@@ -113,11 +113,11 @@ def new_amail(request):
             bcc = form.cleaned_data['bcc']
             cc = form.cleaned_data['cc']
             file = form.cleaned_data['file']
-            signature = list(Signature.objects.filter(user=user))
-            print(signature)
+            # signature = list(Signature.objects.filter(user=user))
+            # print(signature)
             sender = user
             mail = Amail.objects.create(sender=sender, status='draft', file=file, subject=subject, body=body,
-                                        signature=signature)
+                                        )
             mail.receiver.add(*receiver)
             mail.receiver.add(*bcc)
             mail.receiver.add(*cc)
@@ -311,25 +311,45 @@ def archive_mail(request, pk):
 @login_required
 def trash_mail(request, pk):
     mail = Amail.objects.get(pk=pk)
-    mail.archive = True
+    mail.trash = True
     mail.save()
     return redirect('inbox_list')
 
 
-class Archive(LoginRequiredMixin, View):
+class ArchiveList(LoginRequiredMixin, ListView):
     """return archive mail"""
+    model = Amail
+    template_name = 'mail/archive.html'
+    context_object_name = 'archive_mail'
+    ordering = ['-mail_date']
 
-    def get(self, request):
-        archive_mail = Amail.objects.filter(archive=True)
-        return render(request, 'mail/archive.html', {'archive_mail': archive_mail})
+    def get_queryset(self):
+        return Amail.objects.filter(trash=False, archive=True).order_by('-mail_date')
 
 
-class Trash(LoginRequiredMixin, View):
+class ArchiveDetail(LoginRequiredMixin, DetailView):
+    """Return detail of archive"""
+    model = Amail
+    context_object_name = 'archive'
+    template_name = 'mail/archive_detail.html'
+
+
+class TrashList(LoginRequiredMixin, ListView):
     """return trash mail"""
+    model = Amail
+    template_name = 'mail/trash.html'
+    context_object_name = 'trash_mail'
+    ordering = ['-mail_date']
 
-    def get(self, request):
-        trash_mail = Amail.objects.filter(trash=True)
-        return render(request, 'mail/trash.html', {'trash_mail': trash_mail})
+    def get_queryset(self):
+        return Amail.objects.filter(trash=True).order_by('-mail_date')
+
+
+class TrashDetail(LoginRequiredMixin, DetailView):
+    """Return detail of trash"""
+    model = Amail
+    context_object_name = 'trash'
+    template_name = 'mail/trash_detail.html'
 
 
 class DraftList(LoginRequiredMixin, ListView):

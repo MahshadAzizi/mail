@@ -22,8 +22,10 @@ urlpatterns = [
     path('archive_mail/<int:pk>', archive_mail, name='archive_mail'),
     path('trash_mail/<int:pk>', trash_mail, name='trash_mail'),
 
-    path('archive/', Archive.as_view(), name='archive'),
-    path('trash/', Trash.as_view(), name='trash'),
+    path('archive/', ArchiveList.as_view(), name='archive'),
+    path('archive_detail/<int:pk>', ArchiveDetail.as_view(), name='archive_detail'),
+    path('trash/', TrashList.as_view(), name='trash'),
+    path('trash_detail/<int:pk>', TrashDetail.as_view(), name='trash_detail'),
     path('draft/', DraftList.as_view(), name='draft'),
     path('draft_detail/<int:pk>', DraftDetail.as_view(), name='draft_detail'),
 
