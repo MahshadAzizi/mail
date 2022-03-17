@@ -92,13 +92,10 @@ def new_amail(request):
             file = form.cleaned_data['file']
             signature = Signature.objects.filter(user=user)
             text_signature = user.signature_set.values('signature')
-            # text = text_signature[]
-            # print(text)
             print(user.signature_set.values_list('signature', flat=True))
             sender = user
             mail = Amail.objects.create(sender=sender, status='send', file=file, subject=subject, body=body,
                                         )
-            # sig = Signature.objects.create(user=user, signature=text_signature.first()['signature'])
             mail.receiver.add(*receiver)
             mail.receiver.add(*bcc)
             mail.receiver.add(*cc)
