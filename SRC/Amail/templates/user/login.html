@@ -8,19 +8,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
     {% if messages %}
         {% for message in messages %}
-            <!-- Success alert -->
-            <div class="container fixed-top">
-                <div class="py-md-4">
-                    <div class="alert d-flex alert-success" role="alert">
-                        <i class="ai-check-circle fs-xl me-3"></i>
-                        <div>
-                            {{ message }}
-                        </div>
-                    </div>
-                </div>
-            </div>
+         {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
         {% endfor %}
+
     {% endif %}
+{#    {% if messages %}#}
+{#        {% for message in messages %}#}
+{#            <!-- Success alert -->#}
+{#            <div class="container fixed-top">#}
+{#                <div class="py-md-4">#}
+{#                    <div class="alert d-flex alert-success" role="alert">#}
+{#                        <i class="ai-check-circle fs-xl me-3"></i>#}
+{#                        <div>#}
+{#                            {{ message }}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        {% endfor %}#}
+{#    {% endif %}#}
     <style>
         * {
             padding: 0;

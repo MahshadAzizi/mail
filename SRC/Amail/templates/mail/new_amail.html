@@ -41,7 +41,10 @@
         </label></p>
         <br>
         <p>signature: <label>
-            {{ form.signature }}
+            <select>
+                <option></option>
+                <option>{{ request.user.signature_set.first }}</option>
+            </select>
         </label></p>
         <br>
         <p>add file: <label>

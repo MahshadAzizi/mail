@@ -17,6 +17,7 @@ urlpatterns = [
     path('add_category_mail/<int:pk>', add_category_mail, name='add_category_mail'),
     path('category_list/', CategoryList.as_view(), name='category_list'),
     path('category_detail/<int:pk>', CategoryDetail.as_view(), name='category_detail'),
+    path('delete_category/<int:pk>', delete_category, name='delete_category'),
 
     path('archive_mail/<int:pk>', archive_mail, name='archive_mail'),
     path('trash_mail/<int:pk>', trash_mail, name='trash_mail'),

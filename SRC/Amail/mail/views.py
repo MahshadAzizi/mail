@@ -7,7 +7,7 @@ from django.views import View
 from django.views.generic import ListView, DetailView, FormView
 from .forms import NewAmailForm, ReplyForm, AddCategoryForm, ForwardForm, AddMailToCategoryForm
 from .models import Amail, Category
-from user.models import User
+from user.models import User, Signature
 
 
 class InboxList(LoginRequiredMixin, ListView):
@@ -90,10 +90,15 @@ def new_amail(request):
             bcc = form.cleaned_data['bcc']
             cc = form.cleaned_data['cc']
             file = form.cleaned_data['file']
-            signature = form.cleaned_data['signature']
+            signature = Signature.objects.filter(user=user)
+            text_signature = user.signature_set.values('signature')
+            # text = text_signature[]
+            # print(text)
+            print(user.signature_set.values_list('signature', flat=True))
             sender = user
             mail = Amail.objects.create(sender=sender, status='send', file=file, subject=subject, body=body,
-                                        signature=signature)
+                                        )
+            # sig = Signature.objects.create(user=user, signature=text_signature.first()['signature'])
             mail.receiver.add(*receiver)
             mail.receiver.add(*bcc)
             mail.receiver.add(*cc)
@@ -111,7 +116,8 @@ def new_amail(request):
             bcc = form.cleaned_data['bcc']
             cc = form.cleaned_data['cc']
             file = form.cleaned_data['file']
-            signature = form.cleaned_data['signature']
+            signature = list(Signature.objects.filter(user=user))
+            print(signature)
             sender = user
             mail = Amail.objects.create(sender=sender, status='draft', file=file, subject=subject, body=body,
                                         signature=signature)
@@ -142,7 +148,7 @@ def reply(request, pk):
             subject = form.cleaned_data['subject']
             body = form.cleaned_data['body']
             file = form.cleaned_data['file']
-            signature = form.cleaned_data['signature']
+            signature = user.signature_set.get('signature')
             sender = user
             mail = Amail.objects.create(sender=sender, status='send', file=file, subject=subject, body=body,
                                         signature=signature)
@@ -259,7 +265,11 @@ class AddCategory(LoginRequiredMixin, FormView):
     success_url = 'category_list'
 
     def form_valid(self, form):
-        form.save()
+        user = self.request.user
+        owner = user
+        name = form.cleaned_data['name']
+        cat = Category.objects.create(owner=owner, name=name)
+        cat.save()
         return redirect('category_list')
 
 
@@ -284,6 +294,13 @@ class CategoryDetail(LoginRequiredMixin, View):
         name = Category.objects.get(pk=pk)
         all_category = Amail.objects.filter(category=name)
         return render(request, self.template_name, {"all_category": all_category})
+
+
+@login_required
+def delete_category(request, pk):
+    cat = Category.objects.get(pk=pk)
+    cat.delete()
+    return redirect('category_list')
 
 
 @login_required

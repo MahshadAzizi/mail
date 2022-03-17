@@ -8,7 +8,10 @@
             <h5 class="card-title" style="color: blueviolet;width: 100px; font-weight: bold">
                 <a href="{% url 'category_detail' pk=category.pk %}">
                 {{ category.name }}</a></h5>
+                <a href="{% url 'delete_category' pk=category.pk %}" style="color: blueviolet"><h5>DeleteCategory</h5></a>
+            <hr>
           {% endfor %}
+
       </div>
     </div>
 <a href="{% url 'add_category'%}"><h3>AddCategory</h3></a>

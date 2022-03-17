@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
-from user.models import User
+from user.models import User, Signature
 
 STATUS = [
     ('draft', 'draft'),
@@ -33,7 +33,7 @@ class Amail(models.Model):
     category = models.ManyToManyField(Category)
     archive = models.BooleanField(null=True, default=False)
     file = models.FileField(validators=[file_size], null=True, upload_to='documents/', blank=True)
-    signature = models.TextField(max_length=255, null=True, blank=True)
+    signature = models.ForeignKey(Signature, on_delete=models.DO_NOTHING, null=True, blank=True)
     trash = models.BooleanField(null=True, default=False)
     reply = models.ManyToManyField('Amail')
     status = models.CharField(max_length=5, choices=STATUS, null=True)

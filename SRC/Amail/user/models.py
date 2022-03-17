@@ -55,3 +55,11 @@ class ContactBook(models.Model):
     email = models.EmailField(null=True, blank=True)
     phone_number = models.CharField(max_length=12, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
+
+
+class Signature(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    signature = models.TextField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return self.signature
