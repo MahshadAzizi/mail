@@ -1,7 +1,7 @@
 {% autoescape off %}
 Hi {{ user.username }},
 
-Please click on the link below to confirm your registration:
+Please click on the link below to confirm your change password:
 
 http://{{ domain }}{% url 'activate_password' uidb64=uid token=token %}
 {% endautoescape %}

@@ -1,13 +1,21 @@
+import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404
+from django.db.models import Q
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.views.generic import ListView, DetailView, FormView
-from .forms import NewAmailForm, ReplyForm, AddCategoryForm, ForwardForm, AddMailToCategoryForm
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .forms import NewAmailForm, ReplyForm, AddCategoryForm, ForwardForm, AddMailToCategoryForm, FilterForm
 from .models import Amail, Category
-from user.models import User, Signature
+from user.models import User, Signature, ContactBook
+from .serializers import ContactsSerializer, EmailSerializer
+import logging
+
+logger = logging.getLogger('mail')
 
 
 class InboxList(LoginRequiredMixin, ListView):
@@ -33,6 +41,7 @@ def inbox_detail(request, pk):
     mail = Amail.objects.filter(pk=pk).first()
 
     if mail is None:
+        logger.error('mail not found')
         Http404('mail not found')
 
     reply_mail_dict = dict()
@@ -90,15 +99,13 @@ def new_amail(request):
             bcc = form.cleaned_data['bcc']
             cc = form.cleaned_data['cc']
             file = form.cleaned_data['file']
-            # signature = Signature.objects.filter(user=user)
-            # text_signature = user.signature_set.values('signature')
-            # print(user.signature_set.values_list('signature', flat=True))
+            signature = form.cleaned_data['signature']
             sender = user
             mail = Amail.objects.create(sender=sender, status='send', file=file, subject=subject, body=body,
-                                        )
+                                        signature=signature)
             mail.receiver.add(*receiver)
-            mail.receiver.add(*bcc)
-            mail.receiver.add(*cc)
+            mail.bcc.add(*bcc)
+            mail.cc.add(*cc)
             mail.save()
 
             messages.success(request, 'send mail Successfully')
@@ -113,14 +120,13 @@ def new_amail(request):
             bcc = form.cleaned_data['bcc']
             cc = form.cleaned_data['cc']
             file = form.cleaned_data['file']
-            # signature = list(Signature.objects.filter(user=user))
-            # print(signature)
+            signature = form.cleaned_data['signature']
             sender = user
             mail = Amail.objects.create(sender=sender, status='draft', file=file, subject=subject, body=body,
-                                        )
+                                        signature=signature)
             mail.receiver.add(*receiver)
-            mail.receiver.add(*bcc)
-            mail.receiver.add(*cc)
+            mail.bcc.add(*bcc)
+            mail.cc.add(*cc)
             mail.save()
 
             messages.success(request, 'save mail Successfully')
@@ -140,18 +146,19 @@ def reply(request, pk):
         form = ReplyForm(request.POST, request.FILES)
         user = request.user
         if form.is_valid():
-            mail = Amail.objects.get(pk=pk)
-            receiver = mail.sender
+            mail_1 = Amail.objects.get(pk=pk)
+            receiver = mail_1.sender
             subject = form.cleaned_data['subject']
             body = form.cleaned_data['body']
             file = form.cleaned_data['file']
-            signature = user.signature_set.get('signature')
+            signature = form.cleaned_data['signature']
             sender = user
-            mail = Amail.objects.create(sender=sender, status='send', file=file, subject=subject, body=body,
-                                        signature=signature)
-            mail.receiver.add(receiver)
-            mail.reply.add(mail.reply)
-            mail.save()
+            mail_2 = Amail.objects.create(sender=sender, status='send', file=file, subject=subject, body=body,
+                                          signature=signature)
+            mail_2.receiver.add(receiver)
+            mail_1.reply.add(mail_2)
+            mail_2.save()
+            mail_1.save()
             messages.success(request, 'send mail Successfully')
             return redirect('home')
         else:
@@ -162,18 +169,19 @@ def reply(request, pk):
         form = ReplyForm(request.POST, request.FILES)
         user = request.user
         if form.is_valid() is False or form.is_valid() is True:
-            mail = Amail.objects.get(pk=pk)
-            receiver = mail.sender
+            mail_1 = Amail.objects.get(pk=pk)
+            receiver = mail_1.sender
             subject = form.cleaned_data['subject']
             body = form.cleaned_data['body']
             file = form.cleaned_data['file']
             signature = form.cleaned_data['signature']
             sender = user
-            mail = Amail.objects.create(sender=sender, status='draft', file=file, subject=subject, body=body,
-                                        signature=signature)
-            mail.receiver.add(receiver)
-            mail.reply.add(mail.reply)
-            mail.save()
+            mail_2 = Amail.objects.create(sender=sender, status='draft', file=file, subject=subject, body=body,
+                                          signature=signature)
+            mail_2.receiver.add(receiver)
+            mail_1.reply.add(mail_2)
+            mail_2.save()
+            mail_1.save()
             messages.success(request, 'save mail Successfully')
             return redirect('home')
     else:
@@ -191,41 +199,45 @@ def forward_mail(request, pk):
         form = ForwardForm(request.POST, request.FILES)
         user = request.user
         if form.is_valid():
-            mail = Amail.objects.get(pk=pk)
-            body = mail.body
-            subject = mail.subject
-            file = mail.file
+            mail_1 = Amail.objects.get(pk=pk)
+            body = mail_1.body
+            subject = mail_1.subject
+            file = mail_1.file
+            signature = mail_1.signature
             receiver = form.cleaned_data['receiver']
             cc = form.cleaned_data['cc']
             bcc = form.cleaned_data['bcc']
             sender = user
-            mail = Amail.objects.create(sender=sender, status='send', body=body, subject=subject, file=file)
+            mail = Amail.objects.create(sender=sender, status='send', body=body, subject=subject, file=file,
+                                        signature=signature)
             mail.receiver.add(*receiver)
-            mail.receiver.add(*cc)
-            mail.receiver.add(*bcc)
+            mail.cc.add(*cc)
+            mail.bcc.add(*bcc)
             mail.save()
             messages.success(request, 'send mail Successfully')
             return redirect('home')
         else:
-            form = ReplyForm()
-        return render(request, 'mail/reply.html', {'form': form})
+            form = ForwardForm()
+        return render(request, 'mail/forward.html', {'form': form})
 
     elif 'save' in request.POST:
         form = ForwardForm(request.POST, request.FILES)
         user = request.user
         if form.is_valid() is False or form.is_valid() is True:
-            mail = Amail.objects.get(pk=pk)
-            body = mail.body
-            subject = mail.subject
-            file = mail.file
+            mail_1 = Amail.objects.get(pk=pk)
+            body = mail_1.body
+            subject = mail_1.subject
+            file = mail_1.file
+            signature = mail_1.signature
             receiver = form.cleaned_data['receiver']
             cc = form.cleaned_data['cc']
             bcc = form.cleaned_data['bcc']
             sender = user
-            mail = Amail.objects.create(sender=sender, status='send', body=body, subject=subject, file=file)
+            mail = Amail.objects.create(sender=sender, status='send', body=body, subject=subject, file=file,
+                                        signature=signature)
             mail.receiver.add(*receiver)
-            mail.receiver.add(*cc)
-            mail.receiver.add(*bcc)
+            mail.cc.add(*cc)
+            mail.bcc.add(*bcc)
             mail.save()
             messages.success(request, 'save mail Successfully')
             return redirect('home')
@@ -369,3 +381,98 @@ class DraftDetail(LoginRequiredMixin, DetailView):
     model = Amail
     context_object_name = 'draft'
     template_name = 'mail/draft_detail.html'
+
+
+class FilterEmail(LoginRequiredMixin, View):
+    form_class = FilterForm
+
+    def get(self, request):
+        form = self.form_class
+        return render(request, 'mail/filter.html', {'username': request.user, 'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            emails = Amail.objects.filter(Q(receiver=request.user) | Q(sender=request.user))
+            if cd['sender']:
+                try:
+                    sender = User.objects.get(username=cd['sender'])
+                    emails = emails.filter(user=sender.id)
+                except:
+                    messages.warning(request, "this user does not exist", 'danger')
+                    return redirect('filteremail')
+            if cd['subject']:
+                emails = emails.filter(Q(subject__icontains=cd['subject']))
+            if cd['body']:
+                emails = emails.filter(Q(body__icontains=cd['body']))
+            if cd['file'] == True:
+                emails = emails.filter(~Q(file=''))
+            for email in emails:
+                if cd['action'] == 'trash':
+                    trash = trash_mail()
+                    trash.get(request, email.id)
+                elif cd['action'] == 'archive':
+                    archive = archive_mail()
+                    archive.get(request, email.id)
+                elif cd['action'] == 'label':
+                    label = CategoryList()
+                    label.get(request, email.id)
+                else:
+                    pass
+            return render(request, 'mail/show_filter_email.html', {'username': request.user, 'emails': emails})
+        return render(request, 'mail/filter.html', {'username': request.user, 'form': form})
+
+
+class FilterAlpineJs(View):
+    def post(self, request):
+        text = self.request.POST.get('search', None)
+        email_list = []
+        if text:
+            emails = Amail.objects.filter(Q(receiver=request.user) | Q(sender=request.user))
+            if emails is not None:
+                emails = emails.filter(Q(subject__icontains=text) | Q(receiver__icontains=text)
+                                       | Q(body__icontains=text) | Q(sender__username__icontains=text))
+            email_list = [{
+                'id': email.id,
+                'subject': email.subject,
+                'sender': email.sender.username,
+                'receiver': email.receiver} for email in emails]
+
+        return HttpResponse(json.dumps({'list': email_list}))
+
+
+class ContactsApiView(APIView):
+    def get(self, request):
+        user = User.objects.get(pk=request.user.id)
+        contacts = ContactBook.objects.filter(user=user)
+        serializer = ContactsSerializer(contacts, many=True)
+        return Response(serializer.data)
+
+
+class EmailsApiView(APIView):
+    def get(self, request):
+        user = User.objects.get(pk=request.user.id)
+        emails = Amail.objects.filter(sender=user)
+        serializer = EmailSerializer(emails, many=True)
+        return Response(serializer.data)
+
+
+@login_required
+def search_email(request):
+    if request.method == 'POST':
+        search_str = json.loads(request.body).get('searchText')
+        emails = Amail.objects.filter(
+            Q(sender=request.user.pk) | Q(receiver=request.user.pk),
+            Q(subject__icontains=search_str) |
+            Q(body__icontains=search_str) |
+            Q(emails_category_name=search_str) |
+            Q(mail_date__istartswith=search_str) |
+            Q(receiver_username_icontains=search_str) |
+            Q(emails_senderusername_icontains=search_str)
+        )
+        data = emails.values()
+        for email in data:
+            email['sender_id'] = User.objects.get(pk=email['sender_id']).username
+            email['mail_date'] = email['mail_date'].date()
+        return JsonResponse(list(data), safe=False)  # safe let to return a not json response

@@ -2,21 +2,30 @@
 {% block title %}Sent List{% endblock %}
 {% block body %}
 <center>
-        <div class="card" style="border-radius: 3px;background-color: lightgray; border-color: white">
-            <div class="card-body" >
+        <div class="list_div">
+            <ol>
+{#        <div class="card" style="border-radius: 3px;background-color: lightgray; border-color: white">#}
+{#            <div class="card-body" >#}
                 {% for mail in mails %}
-                    {% for resiver in mail.receiver.all %}
-                        <h5 class="card-title" style="color: blueviolet">
-                            <a href="{% url 'sent_detail' pk=mail.pk %}">
-                            {{ resiver }}</a>
-                        </h5>
+                    {% for receiver in mail.receiver.all %}
+                        <li class="" style="background-color: lightgray; width: 700px; height: 50px">
+                            <a  href="{% url 'sent_detail' pk=mail.pk %}" >
+                                {{ receiver }} : {{ mail.subject }} - {{ mail.mail_date }}
+                            </a>
+                        </li>
+{#                        <h5 class="card-title" style="color: blueviolet">#}
+{#                            <a href="{% url 'sent_detail' pk=mail.pk %}">#}
+{#                            {{ receiver }}</a>#}
+{#                        </h5>#}
                     {% endfor %}
-                    <p class="card-text" style="color: blueviolet">{{ mail.subject }}</p>
-                    <p class="card-text" style="color: blueviolet"><small
-                            class="text-muted">{{ mail.mail_date }}</small></p>
+{#                    <p class="card-text" style="color: blueviolet">{{ mail.subject }}</p>#}
+{#                    <p class="card-text" style="color: blueviolet"><small#}
+{#                            class="text-muted">{{ mail.mail_date }}</small></p>#}
                 <br><br>
                 {% endfor %}
-            </div>
+            </ol>
         </div>
+{#            </div>#}
+{#        </div>#}
 </center>
 {% endblock %}

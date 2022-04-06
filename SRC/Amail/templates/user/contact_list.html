@@ -1,17 +1,30 @@
 {% extends "layout/_base.html" %}
 {% block title %}contact List{% endblock %}
 {% block body %}
-<center>
-    {% for contact in all_contact %}
-        <div class="card" >
-          <div class="card-body" style="border-radius: 3px;background-color: lightgray;">
-            <h5 class="card-title" style="color: blueviolet;width: 200px"><a href="{% url 'contact_detail' pk=contact.pk %}">
-                {{ contact.username }}</a></h5>
-{#            <p class="card-text" style="color: blueviolet;width: 200px">{{ contact.name }}</p>#}
 
+<center>
+    <form action="" method="get">
+        {{ form }}
+        <input type="submit" value="search">
+    </form>
+    <div class="list_div">
+        <ol>
+        {% for contact in contacts %}
+            <li class="" style="background-color: lightgray; width: 700px; height: 50px">
+                <a  href="{% url 'contact_detail' pk=contact.pk %}" >
+                    {{ contact.username }}
+                </a>
+            </li>
+{#            <div class="card" >#}
+{#              <div class="card-body" style="border-radius: 3px;background-color: lightgray;">#}
+{#                <h5 class="card-title" style="color: blueviolet;width: 200px"><a href="{% url 'contact_detail' pk=contact.pk %}">#}
+{#                    {{ contact.username }}</a></h5>#}
+            <br>
           {% endfor %}
-      </div>
+        </ol>
+{#      </div>#}
     </div>
+<button type="submit"><a href="{% url 'contactscsv' %}">Download</a></button>
 <a href="{% url 'add_contact'%}"><h3>AddContact</h3></a>
 </center>
 {% endblock %}

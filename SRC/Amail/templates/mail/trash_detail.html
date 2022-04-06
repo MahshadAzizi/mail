@@ -10,16 +10,17 @@
                   <div class="card-body">
                     <a class="text-dark" style="color: blueviolet">{{ trash.receiver.username }}</a><br>
                     <br><a class="text-dark" style="color: blueviolet">{{ trash.subject }}</a><br>
-                    <br><a class="text-dark" style="color: blueviolet">{{ trash.body }}</a><br>
-                    <br><a class="text-dark" style="color: blueviolet">{{ trash.signature }}</a><br>
+                    <br><a class="text-dark" style="color: blueviolet">{{ trash.body | safe }}</a><br>
+                    {% if trash.signature %}
+                        <p class="text-dark" style="color: blueviolet">{{ trash.signature }}</p>
+                      {% endif %}
+                  {% if trash.file %}
+                        <a href="{{ trash.file.url }}">file </a>
+                    {% endif %}
                     <br><small class="text-muted" style="color: blueviolet">send on {{ trash.mail_date }}</small>
                     <br><br>
                   </div>
-                    {% if trash.file %}
-                        <a href="{{ trash.file.url }}"><iframe class="card-img-top" src="{{ trash.file.url }}">
 
-                        </iframe></a>
-                    {% endif %}
                 </div>
                </div>
             </div>

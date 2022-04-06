@@ -1,8 +1,8 @@
 from django import forms
-from django.forms import ValidationError
-from .models import Amail, Category
+from django.forms import ValidationError, RadioSelect
+from .models import Amail, Category, Filter
 from django_select2.forms import Select2MultipleWidget
-from user.models import User
+from user.models import User, Signature
 
 
 class NewAmailForm(forms.ModelForm):
@@ -27,7 +27,7 @@ class NewAmailForm(forms.ModelForm):
 
     class Meta:
         model = Amail
-        fields = ['body', 'subject', 'file']
+        fields = ['body', 'subject', 'file', 'signature']
 
     def clean_receiver(self):
         receiver = self.cleaned_data['receiver']
@@ -61,42 +61,9 @@ class NewAmailForm(forms.ModelForm):
 
 
 class ReplyForm(forms.ModelForm):
-    receiver = forms.ModelMultipleChoiceField(
-        queryset=User.objects.all(),
-        widget=Select2MultipleWidget(
-            attrs={'style': 'max-width: 400px;'}
-        )
-    )
-    reply = forms.ModelMultipleChoiceField(
-        queryset=Amail.objects.all(),
-        widget=Select2MultipleWidget(
-            attrs={'style': 'max-width: 400px;'}
-        )
-    )
-
     class Meta:
         model = Amail
-        fields = ['body', 'subject', 'file']
-
-    def clean_receiver(self):
-        receiver = self.cleaned_data['receiver']
-        receivers = []
-        for r in receiver:
-            user = User.objects.filter(username=r).first()
-            if user is None:
-                raise ValidationError('user by this username not found')
-            receivers.append(user)
-        return receivers
-
-    def clean_reply(self):
-        reply = self.cleaned_data['reply']
-        replys = []
-        for r in reply:
-            mail = Amail.objects.filter(reply=r).first()
-            if mail is None:
-                raise ValidationError('user by this username not found')
-            replys.append(mail)
-        return replys
+        fields = ['body', 'subject', 'file', 'signature']
 
 
 class AddCategoryForm(forms.ModelForm):
@@ -180,3 +147,11 @@ class ForwardForm(forms.ModelForm):
                 raise ValidationError('user by this username not found')
             cc_list.append(user)
         return cc_list
+
+
+class FilterForm(forms.ModelForm):
+    class Meta:
+        model = Filter
+        fields = ['sender', 'subject', 'body', 'file', 'action']
+        file = forms.BooleanField(widget=RadioSelect(choices=[(True, 'Yes'),
+                                                              (False, 'No')]))

@@ -1,12 +1,15 @@
+import csv
+from django.db.models import Q
+from django.http import HttpResponse
 from django.utils.encoding import force_str
 from .token import account_activation_token
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.views.generic import FormView, View
+from django.views.generic import FormView, View, ListView
 from .forms import *
 from .models import *
 from django.views.generic import DetailView
@@ -14,6 +17,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+import logging
+
+logger = logging.getLogger('user')
 
 
 class SignUpView(FormView):
@@ -57,6 +63,7 @@ class ActivateAccount(View):
             return redirect('login')
 
         messages.warning(request, 'The confirmation link was invalid, possibly because it has already been used.')
+        logger.warning('The confirmation link was invalid, possibly because it has already been used.')
         return redirect('signup')
 
 
@@ -85,6 +92,8 @@ class LogInView(FormView):
             return redirect('home')
 
         messages.error(self.request, "Invalid username or password.")
+        logger.error(f'{username} Invalid username or password')
+        # logger.warning(f'{username} Invalid username or password')
         return self.render_to_response(self.get_context_data())
 
 
@@ -107,9 +116,9 @@ class ActivateAccountForgotPassword(View):
             login(request, user)
             messages.success(request, 'Your account have been confirmed.')
             return redirect('change_password')
-
-        messages.warning(request, 'The confirmation link was invalid, possibly because it has already been used.')
-        return redirect('signup')
+        else:
+            messages.warning(request, 'The confirmation link was invalid, possibly because it has already been used.')
+            return redirect('signup')
 
 
 class ForgotPassword(FormView):
@@ -141,11 +150,13 @@ class ChangePassword(FormView):
 
     def form_valid(self, form):
         username = form.cleaned_data.get('username')
+        if '@Amail.com' not in username:
+            username += '@Amail.com'
         user = User.objects.get(username=username)
         password = form.cleaned_data.get('password')
-        re_password = form.cleaned_data.get('re_password')
-        user.set_password(re_password)
+        user.set_password(password)
         user.save()
+        return redirect('home')
 
 
 @login_required(login_url='login')
@@ -177,6 +188,7 @@ class AddContact(LoginRequiredMixin, FormView):
             return redirect('contact_list')
         else:
             messages.error(self.request, 'user does not exist!!')
+            logger.error(f'username {username} does not exist!!')
             return redirect('contact_list')
 
 
@@ -186,8 +198,14 @@ class ContactList(LoginRequiredMixin, View):
     template_name = 'user/contact_list.html'
 
     def get(self, request):
-        all_contact = ContactBook.objects.filter(user=request.user.id)
-        return render(request, self.template_name, {"all_contact": all_contact})
+        contacts = ContactBook.objects.filter(user=request.user.id)
+        form = SearchForm()
+        if 'search' in request.GET:
+            form = SearchForm(request.GET)
+            if form.is_valid():
+                cd = form.cleaned_data['search']
+                contacts = contacts.filter(Q(username__icontains=cd) | Q(email__icontains=cd))
+        return render(request, self.template_name, {'form': form, 'contacts': contacts})
 
 
 class ContactDetail(LoginRequiredMixin, DetailView):
@@ -195,3 +213,47 @@ class ContactDetail(LoginRequiredMixin, DetailView):
     model = ContactBook
     context_object_name = 'contact'
     template_name = 'user/contact_detail.html'
+
+
+class AddSignature(LoginRequiredMixin, FormView):
+    form_class = AddSignatureForm
+    template_name = 'user/add_signature.html'
+    success_url = 'signature_list'
+
+    def form_valid(self, form):
+        user = self.request.user
+        owner = user
+        signature = form.cleaned_data['signature']
+        sig = Signature.objects.create(user=owner, signature=signature)
+        sig.save()
+        return redirect('signature_list')
+
+
+class SignatureList(LoginRequiredMixin, ListView):
+    """Return list of user signature"""
+    model = Signature
+    template_name = 'user/signature_list.html'
+    context_object_name = 'all_signature'
+
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.request.user)
+        return Signature.objects.filter(user=user)
+
+
+@login_required
+def delete_signature(request, pk):
+    sig = Signature.objects.get(pk=pk)
+    sig.delete()
+    return redirect('signature_list')
+
+
+def contact_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=venues.csv'
+    writer = csv.writer(response)
+    allcontacts = ContactBook.objects.filter(user=request.user)
+    writer.writerow(['username', 'first_name', 'last_name', 'email', 'phone_number', 'birth_date', 'user'])
+    for venue in allcontacts:
+        writer.writerow([venue.username, venue.first_name, venue.last_name, venue.email, venue.phone_number,
+                         venue.birth_date, venue.user])
+    return response

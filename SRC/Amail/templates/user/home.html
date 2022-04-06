@@ -1,24 +1,43 @@
 {% extends "layout/_base.html" %}
-{% block title %}HOME{% endblock %}
+{% block title %}Search{% endblock %}
 {% block body %}
-{#<section>#}
-{#    <form  method="post">#}
-{#        {% csrf_token %}#}
-{#        <div class="container" >#}
-{#        <div class="row">#}
-{#          <div class="col-md-8">#}
-{#            {% for object in object_list %}#}
-{#            <div class="card card-signin my-5">#}
-{#              <div class="card-body" >#}
-{#                <a class="text-dark" href="/mail/mail_detail/{{ object.id }}" ><b>{{ object.sender }}</b></a>#}
-{#                <br><br>#}
-{#                <p class="card-text text-dark">{{ object.subject }}</p>#}
-{#              </div>#}
-{#            </div>#}
-{#            {% endfor %}#}
-{#           </div>#}
+{#<center>#}
+{#<div class="col-md-4">#}
+{#        <div class="form-group">#}
+{##}
+{#            <input type="text" oninput="searcher(this)" class="form-control"#}
+{#                   placeholder="Search" name="search">#}
+{##}
+{#            <script>#}
+{#                function searcher(el) {#}
+{#                    $('#search_list').empty()#}
+{#                    let search = el.value#}
+{#                    $.ajax({#}
+{#                        url: "{% url 'alpine' %}",#}
+{#                        method: 'POST',#}
+{#                        headers: {#}
+{#                            'X-CSRFToken': '{{ csrf_token }}'#}
+{#                        },#}
+{#                        data: 'search=' + search#}
+{#                    }).done(function (data) {#}
+{#                        let emails = JSON.parse(data).list#}
+{#                        for (let e of emails) {#}
+{#                            let text = `subject: ${e.subject} sender: ${e.sender} receiver: ${e.receiver}`#}
+{#                            let a = `<a href="/mail/inbox_detail/${e.id}">${text}</a>`#}
+{#                            let li = `<li>${a}</li>`#}
+{#                            $('#search_list').append(li)#}
+{##}
+{#                        }#}
+{#                    })#}
+{##}
+{#                }#}
+{##}
+{##}
+{#            </script>#}
+{#            <ul id="search_list">#}
+{##}
+{#            </ul>#}
 {#        </div>#}
 {#    </div>#}
-{#    </form>#}
-{#</section>#}
+{#</center>#}
 {% endblock %}

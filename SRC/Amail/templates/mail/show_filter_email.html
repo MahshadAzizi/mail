@@ -1,0 +1,18 @@
+{% extends "layout/_base.html" %}
+{% block title %}Show Filter{% endblock %}
+{% block body %}
+    <center>
+    <h2 class="mb-4">Detail</h2>
+    {% for email in emails %}
+        {% with replies=email.id %}
+            <a href="{% url 'inbox_detail' replies %}">
+                <div>
+                    <p>{{ email.subject }}</p>
+                    <small>{{ email.body|safe }}</small>
+                </div>
+            </a>
+
+        {% endwith %}
+    {% endfor %}
+    </center>
+{% endblock %}

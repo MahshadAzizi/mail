@@ -1,0 +1,19 @@
+{% extends "layout/_base.html" %}
+{% block title %}Signature List{% endblock %}
+{% block body %}
+<center>
+    {% for signature in all_signature %}
+        <div class="card" >
+          <div class="card-body" style="border-radius: 3px;background-color: lightgray;">
+            <h5 class="card-title" style="color: blueviolet;width: 100px; font-weight: bold">
+                <a>{{ signature.signature }}</a></h5>
+{#                <a href="{% url 'delete_signature' pk=signature.pk %}" style="color: blueviolet"><h5>DeleteSignature</h5></a>#}
+
+            <hr>
+          {% endfor %}
+
+      </div>
+    </div>
+<a href="{% url 'add_signature'%}"><h3>AddSignature</h3></a>
+</center>
+{% endblock %}

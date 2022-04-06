@@ -11,14 +11,15 @@
                     <a class="text-dark" style="color: blueviolet">{{ draft.receiver.username }}</a><br>
                     <br><a class="text-dark" style="color: blueviolet">{{ draft.subject }}</a><br>
                     <br><a class="text-dark" style="color: blueviolet">{{ draft.body }}</a><br>
+                      {% if draft.signature %}
+                            <p class="text-dark" style="color: blueviolet">{{ draft.signature }}</p>
+                      {% endif %}
+                    {% if draft.file %}
+                            <a href="{{ draft.file.url }}">file</a>
+                    {% endif %}
                     <br><small class="text-muted" style="color: blueviolet">send on {{ draft.mail_date }}</small>
                     <br><br>
                   </div>
-                    {% if draft.file %}
-                        <a href="{{ draft.file.url }}"><iframe class="card-img-top" src="{{ draft.file.url }}">
-
-                        </iframe></a>
-                    {% endif %}
                 </div>
                </div>
             </div>

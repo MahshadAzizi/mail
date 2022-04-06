@@ -113,3 +113,13 @@ class AddContactForm(forms.ModelForm):
     #             raise ValidationError('user by this username not found')
     #         contacts.append(user)
     #     return contacts
+
+
+class AddSignatureForm(forms.ModelForm):
+    class Meta:
+        model = Signature
+        fields = ['signature']
+
+
+class SearchForm(forms.Form):
+    search = forms.CharField()

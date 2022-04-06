@@ -1,0 +1,27 @@
+{% extends "layout/_base.html" %}
+{% block title %}AddSignature{% endblock %}
+{% if messages %}
+        {% for message in messages %}
+            <!-- Success alert -->
+            <div class="container fixed-top">
+                <div class="py-md-4">
+                    <div class="alert d-flex alert-success" role="alert">
+                        <i class="ai-check-circle fs-xl me-3"></i>
+                        <div>
+                            {{ message }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% block body %}
+<center>
+    <form action="{% url 'add_signature' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_ul }}
+        <br>
+        <button type="submit">AddSignature</button>
+    </form>
+</center>
+{% endblock %}

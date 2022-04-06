@@ -19,10 +19,17 @@ from django.conf.urls.static import static
 from Amail import settings
 from user.views import *
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('mail/', include('mail.urls')),
     path('user/', include('user.urls')),
     path('', SignUpView.as_view(), name='signup'),
+    path('api-auth/', include('rest_framework.urls')),
+    path('admin_tools_stats/', include('admin_tools_stats.urls')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
 

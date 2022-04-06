@@ -1,5 +1,8 @@
 from django.urls import path
+from django.views.decorators.csrf import csrf_exempt
+
 from .views import *
+from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path('new_amail/', new_amail, name='new_amail'),
@@ -24,9 +27,21 @@ urlpatterns = [
 
     path('archive/', ArchiveList.as_view(), name='archive'),
     path('archive_detail/<int:pk>', ArchiveDetail.as_view(), name='archive_detail'),
+
     path('trash/', TrashList.as_view(), name='trash'),
     path('trash_detail/<int:pk>', TrashDetail.as_view(), name='trash_detail'),
+
     path('draft/', DraftList.as_view(), name='draft'),
     path('draft_detail/<int:pk>', DraftDetail.as_view(), name='draft_detail'),
+
+    path('filteremail/', FilterEmail.as_view(), name='filteremail'),
+
+    # path('alpine/', FilterAlpineJs.as_view(), name='alpine'),
+
+    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
+    path('contacts-api/', ContactsApiView.as_view(), name='contacts-api'),
+    path('emails-api/', EmailsApiView.as_view(), name='emails-api'),
+
+    path('search-email/', csrf_exempt(search_email), name="search_email"),
 
 ]

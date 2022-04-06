@@ -2,22 +2,37 @@
 {% block title %}Draft{% endblock %}
 {% block body %}
 <center>
-     <div class="card" style="border-radius: 3px;background-color: lightgray; border-color: white">
-            <div class="card-body" >
-                {% for draft in draft_mail %}
-                    {% for receiver_ in draft.receiver.all %}
-                        <h5 class="card-title" style="color: blueviolet">
-                            <a href="{% url 'draft_detail' pk=draft.pk %}">
-                            {{ receiver_ }}</a>
-                        </h5>
+        <div class="list_div">
+            <ol>
+            {% for draft in draft_mail %}
+                {% for receiver_ in draft.receiver.all %}
+                <li class="" style="background-color: lightgray; width: 700px; height: 50px">
+                        <a  href="{% url 'draft_detail' pk=draft.pk %}" >
+                            {{ receiver_ }} : {{ draft.subject }} - {{ draft.mail_date }}
+                        </a>
+
+                    </li>
+
+{#     <div class="card" style="border-radius: 3px;background-color: lightgray; border-color: white">#}
+{#            <div class="card-body" >#}
+{#                {% for draft in draft_mail %}#}
+{#                    {% for receiver_ in draft.receiver.all %}#}
+{#                        <h5 class="card-title" style="color: blueviolet">#}
+{#                            <a href="{% url 'draft_detail' pk=draft.pk %}">#}
+{#                            {{ receiver_ }}</a>#}
+{#                        </h5>#}
+{#                    {% endfor %}#}
+{#                    <p class="card-text" style="color: blueviolet">{{ draft.subject }}</p>#}
+{#                    <p class="card-text" style="color: blueviolet"><small#}
+{#                            class="text-muted">{{ draft.mail_date }}</small></p>#}
+{#                <br><br>#}
+{#                    <hr>#}
+                    <br>
                     {% endfor %}
-                    <p class="card-text" style="color: blueviolet">{{ draft.subject }}</p>
-                    <p class="card-text" style="color: blueviolet"><small
-                            class="text-muted">{{ draft.mail_date }}</small></p>
-                <br><br>
-                    <hr>
                 {% endfor %}
-            </div>
-        </div>
+             </ol>
+    </div>
+{#            </div>#}
+{#        </div>#}
 </center>
 {% endblock %}

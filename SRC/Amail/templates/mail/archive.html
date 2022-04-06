@@ -2,21 +2,29 @@
 {% block title %}Archive{% endblock %}
 {% block body %}
 <center>
-     <div class="card" style="border-radius: 3px;background-color: lightgray; border-color: white">
-            <div class="card-body" >
+        <div class="list_div">
+            <ol>
+{#     <div class="card" style="border-radius: 3px;background-color: lightgray; border-color: white">#}
+{#            <div class="card-body" >#}
                 {% for archive in archive_mail %}
                     {% for receiver_ in archive.receiver.all %}
-                        <h5 class="card-title" style="color: blueviolet">
-                            <a href="{% url 'archive_detail' pk=archive.pk %}">
-                            {{ receiver_ }}</a>
-                        </h5>
+                        <li class="" style="background-color: lightgray; width: 700px; height: 50px">
+                            <a  href="{% url 'archive_detail' pk=archive.pk %}" >
+                                {{ receiver_ }} : {{ archive.subject }} - {{ archive.mail_date }}
+                            </a>
+                        </li>
+{#                        <h5 class="card-title" style="color: blueviolet">#}
+{#                            <a href="{% url 'archive_detail' pk=archive.pk %}">#}
+{#                            {{ receiver_ }}</a>#}
+{#                        </h5>#}
                     {% endfor %}
-                    <p class="card-text" style="color: blueviolet">{{ archive.subject }}</p>
-                    <p class="card-text" style="color: blueviolet"><small
-                            class="text-muted">{{ archive.mail_date }}</small></p>
+{#                    <p class="card-text" style="color: blueviolet">{{ archive.subject }}</p>#}
+{#                    <p class="card-text" style="color: blueviolet"><small#}
+{#                            class="text-muted">{{ archive.mail_date }}</small></p>#}
                 <br><br>
                 {% endfor %}
-            </div>
+            </ol>
+{#            </div>#}
         </div>
 </center>
 {% endblock %}
