@@ -83,11 +83,11 @@ WSGI_APPLICATION = 'Amail.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'amail',
-        'USER': 'postgres',
-        'PASSWORD': 'mahshad76',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USERNAME'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
     }
 }
 
@@ -140,8 +140,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'mahshad.azizi98@gmail.com'
-EMAIL_HOST_PASSWORD = 'ifubykrfvrbiybia'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -184,10 +184,11 @@ LOGGING = {
             'formatter': 'verbose',
         },
     },
-    'logger': {
+    'loggers': {
         'user': {
             'handlers': ['user_app'],
             'level': 'WARNING',
+
         },
         'mail': {
             'handlers': ['mail_app'],

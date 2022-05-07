@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.urls import reverse
-
 from user.models import User
 from mail.models import Amail
 
@@ -26,7 +25,7 @@ class InboxListViewTest(TestCase):
         test_mail.cc.add(cc)
         test_mail.bcc.add(bcc)
 
-    def test_logged_in_uses_correct_template(self):
+    def test_logged_in_uses_correct_template_inbox(self):
         login = self.client.login(username='user1', password='1X<ISRUkw+tuK')
         response = self.client.get(reverse('inbox_list'))
 
@@ -37,6 +36,30 @@ class InboxListViewTest(TestCase):
 
         # Check we used correct template
         self.assertTemplateUsed(response, 'mail/inbox_list.html')
+
+    def test_logged_in_uses_correct_template_sent(self):
+        login = self.client.login(username='user1', password='1X<ISRUkw+tuK')
+        response = self.client.get(reverse('sent_list'))
+
+        # Check our user is logged in
+        self.assertEqual(str(response.context['user']), 'user1')
+        # Check that we got a response "success"
+        self.assertEqual(response.status_code, 200)
+
+        # Check we used correct template
+        self.assertTemplateUsed(response, 'mail/sent_list.html')
+
+    def test_logged_in_uses_correct_template_draft(self):
+        login = self.client.login(username='user1', password='1X<ISRUkw+tuK')
+        response = self.client.get(reverse('draft'))
+
+        # Check our user is logged in
+        self.assertEqual(str(response.context['user']), 'user1')
+        # Check that we got a response "success"
+        self.assertEqual(response.status_code, 200)
+
+        # Check we used correct template
+        self.assertTemplateUsed(response, 'mail/draft.html')
 
 
 class InboxDetailViewTest(TestCase):
@@ -60,10 +83,26 @@ class InboxDetailViewTest(TestCase):
         self.test_mail.cc.add(cc)
         self.test_mail.bcc.add(bcc)
 
-    def test_uses_correct_template(self):
+    def test_uses_correct_template_inbox_detail(self):
         login = self.client.login(username='user2', password='2HJ1vRV0Z&3iD')
         response = self.client.get(reverse('inbox_detail', kwargs={'pk': self.test_mail.pk}))
         self.assertEqual(response.status_code, 200)
 
         # Check we used correct template
         self.assertTemplateUsed(response, 'mail/inbox_detail.html')
+
+    def test_uses_correct_template_sent_detail(self):
+        login = self.client.login(username='user2', password='2HJ1vRV0Z&3iD')
+        response = self.client.get(reverse('sent_detail', kwargs={'pk': self.test_mail.pk}))
+        self.assertEqual(response.status_code, 200)
+
+        # Check we used correct template
+        self.assertTemplateUsed(response, 'mail/sent_detail.html')
+
+    def test_uses_correct_template_draft_detail(self):
+        login = self.client.login(username='user2', password='2HJ1vRV0Z&3iD')
+        response = self.client.get(reverse('draft_detail', kwargs={'pk': self.test_mail.pk}))
+        self.assertEqual(response.status_code, 200)
+
+        # Check we used correct template
+        self.assertTemplateUsed(response, 'mail/draft_detail.html')

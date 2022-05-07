@@ -410,10 +410,10 @@ class FilterEmail(LoginRequiredMixin, View):
                 emails = emails.filter(~Q(file=''))
             for email in emails:
                 if cd['action'] == 'trash':
-                    trash = trash_mail()
+                    trash = TrashList()
                     trash.get(request, email.id)
                 elif cd['action'] == 'archive':
-                    archive = archive_mail()
+                    archive = ArchiveList()
                     archive.get(request, email.id)
                 elif cd['action'] == 'label':
                     label = CategoryList()
@@ -466,10 +466,10 @@ def search_email(request):
             Q(sender=request.user.pk) | Q(receiver=request.user.pk),
             Q(subject__icontains=search_str) |
             Q(body__icontains=search_str) |
-            Q(emails_category_name=search_str) |
-            Q(mail_date__istartswith=search_str) |
-            Q(receiver_username_icontains=search_str) |
-            Q(emails_senderusername_icontains=search_str)
+            # Q(emails__category__name=search_str) |
+            Q(mail_date__istartswith=search_str)
+            # Q(receiver__icontains=search_str) |
+            # Q(emails_senderusername_icontains=search_str)
         )
         data = emails.values()
         for email in data:
