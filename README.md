@@ -1,25 +1,20 @@
-# Maktab_Final_Project
+# Maktab Final Project
 
+# environment variables
+```bash
+$DATABASE_NAME=
+$DATABASE_USER=
+$DATABASE_PASS=
+$DATABASE_HOST=
+$DEBUG=
+$SECRET_KEY=
+$ALLOWED_HOSTS=
+```
 
-#environment variable
-
-$DB_NAME=
-
-$DB_USERNAME=
-
-$DB_PASSWORD=
-
-$DB_HOST=
-
-$DB_PORT=
-
-
-
-
-#installation
-
+# installation
+```bash
 pip install -r requirements.txt
-
 python3 manage.py makemigrations
-
 python3 manage.py migrate
+
+```
